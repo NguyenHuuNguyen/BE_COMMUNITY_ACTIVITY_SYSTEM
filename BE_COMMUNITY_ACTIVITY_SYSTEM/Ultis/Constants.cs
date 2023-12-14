@@ -29,5 +29,13 @@
             public const string WEBSITE_LINK = @"^(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?$";
         }
 
+        public static class Roles
+        {
+            public const string SINH_VIEN = "SINHVIEN";
+            public const string LOP_TRUONG = "LOPTRUONG";
+            public const string GIAO_VIEN = "GIAOVIEN";
+            public const string TRUONG_KHOA = "TRUONGKHOA";
+            public const string ADMIN = "ADMIN";
+        }
     }
 }   

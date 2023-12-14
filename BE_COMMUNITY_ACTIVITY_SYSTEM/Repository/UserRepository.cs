@@ -62,9 +62,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
 
         public async Task<User> GetUserByIdAsync(string userId)
         {
-#pragma warning disable CS8603 // Possible null reference return.
-            return await _context.Users.FirstOrDefaultAsync(u => userId.Equals(u.Id) && !u.IsDeleted);
-#pragma warning restore CS8603 // Possible null reference return.
+            var user = await _context.Users.FirstOrDefaultAsync(u => userId.Equals(u.Id) && !u.IsDeleted);
+            return user!;
         }
 
         public async Task<ICollection<User>> GetUsersAsync()

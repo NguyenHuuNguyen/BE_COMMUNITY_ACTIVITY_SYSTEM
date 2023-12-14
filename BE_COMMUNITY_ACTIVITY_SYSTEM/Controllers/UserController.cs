@@ -75,7 +75,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
                 return _commonRepository.CreateBadRequestResponse(this, errors);
             }
 
-            if (_classRepository.CheckClassExists(classId) == false)
+            if (await _classRepository.CheckClassExistsAsync(classId) == false)
             {
                 return NotFound();
             }

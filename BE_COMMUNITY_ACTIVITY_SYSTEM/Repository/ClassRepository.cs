@@ -29,9 +29,9 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return _context.Classes.Any(c => classId.Equals(c.Id) && c.IsDeleted == false);
         }
 
-        public Task<bool> CheckClassExistsAsync(string classId)
+        public async Task<bool> CheckClassExistsAsync(string classId)
         {
-            return _context.Classes.AnyAsync(c => classId.Equals(c.Id) && c.IsDeleted == false);
+            return await _context.Classes.AnyAsync(c => classId.Equals(c.Id) && c.IsDeleted == false);
         }
 
         public Task<Class> CreateClassAsync(ClassCreateDto data)

@@ -6,6 +6,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Models
     {
         [Key]
         public String? Id { get; set; }
+        public String? RoleName { get; set; }
         public String? RoleDescription { get; set; }
         public DateTime CreatedAt { get; set; }
         public String? CreatedBy { get; set; }
