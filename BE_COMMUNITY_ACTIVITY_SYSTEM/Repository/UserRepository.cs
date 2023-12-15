@@ -13,12 +13,14 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly ICommonRepository _commonRepository;
+        private readonly IAuthRepository _authRepository;
 
-        public UserRepository(DataContext context, IMapper mapper, ICommonRepository commonRepository)
+        public UserRepository(DataContext context, IMapper mapper, ICommonRepository commonRepository, IAuthRepository authRepository)
         {
             _context = context;
             _mapper = mapper;
             _commonRepository = commonRepository;
+            _authRepository = authRepository;
         }
 
         public async Task<User> CreateUserAsync(UserCreateDto user)
@@ -32,13 +34,11 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             {
                 newUser.StudentId = await GetNextStudentId();
                 _commonRepository.CreatePasswordHash(newUser.StudentId, out passwordHash, out passwordSalt);
-                // Phân quyền sinh viên
             }
             else
             {
                 newUser.TeacherId = await GetNextTeacherId();
                 _commonRepository.CreatePasswordHash(newUser.TeacherId, out passwordHash, out passwordSalt);
-                // Phân quyền giáo viên
             }
 
             newUser.PasswordHash = passwordHash;
@@ -46,6 +46,15 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
+
+            if (user.IsStudent)
+            {
+                await _authRepository.AsignRoleAsync(newUser.Id, Constants.Roles.SINH_VIEN);
+            }
+            else
+            {
+                await _authRepository.AsignRoleAsync(newUser.Id, Constants.Roles.GIAO_VIEN);
+            }
             return newUser;
         }
 
@@ -66,9 +75,21 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return user!;
         }
 
+        public async Task<User> GetUserByAccountAsync(string account)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => (account.Equals(u.StudentId) || account.Equals(u.TeacherId)) 
+                                                                    && !u.IsDeleted);
+            return user!;
+        }
+
         public async Task<ICollection<User>> GetUsersAsync()
         {
             return await _context.Users.Where(u => !u.IsDeleted).ToListAsync();
+        }
+
+        public async Task<ICollection<User>> GetTeachersAsync()
+        {
+            return await _context.Users.Where(u => !u.IsDeleted && u.TeacherId != null).ToListAsync();
         }
 
         public async Task<ICollection<User>> GetUsersByClassIdAsync(string classId)

@@ -2,14 +2,15 @@
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces;
-using BE_COMMUNITY_ACTIVITY_SYSTEM.Models;
-using BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.Constants;
+using static BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.Constants.Roles;
 
 namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]/[action]")]
     public class UserController : Controller
     {
@@ -26,11 +27,14 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             _classRepository = classRepository;
         }
 
-        [HttpGet]
+        //
+        //test
+        //
+        [HttpGet, Authorize(Roles = SINH_VIEN + "," + TRUONG_KHOA)]
         [ProducesResponseType(200, Type = typeof(UserGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetByUserId([FromQuery] string userId)
+        public async Task<IActionResult> GetUserByUserId([FromQuery] string userId)
         {
             if (_commonRepository.IsGuid(userId) == false)
             {
@@ -53,7 +57,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<UserGetDto>))]
-        public async Task<IActionResult> GetList()
+        public async Task<IActionResult> GetUsersList()
         {
             var users = _mapper.Map<List<UserGetDto>>(await _userRepository.GetUsersAsync());
             return Ok(users);
@@ -61,9 +65,17 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<UserGetDto>))]
+        public async Task<IActionResult> GetTeachersList()
+        {
+            var users = _mapper.Map<List<UserGetDto>>(await _userRepository.GetTeachersAsync());
+            return Ok(users);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<UserGetDto>))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetListByClassId([FromQuery] string classId)
+        public async Task<IActionResult> GetStudentsListByClassId([FromQuery] string classId)
         {
             if (_commonRepository.IsGuid(classId) == false)
             {
@@ -118,7 +130,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
+        [HttpPut]
         [ProducesResponseType(200, Type = typeof(UserGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDto userUpdate)
@@ -127,7 +139,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             return Ok(user);
         }
 
-        [HttpPut]
+        [HttpPatch]
         [ProducesResponseType(200, Type = typeof(UserGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         public async Task<IActionResult> UpdateUserStatus([FromBody] UserStatusUpdateDto updateData)

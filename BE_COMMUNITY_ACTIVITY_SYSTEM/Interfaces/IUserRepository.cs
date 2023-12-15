@@ -6,7 +6,9 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
     public interface IUserRepository
     {
         Task<User> GetUserByIdAsync(string userId);
+        Task<User> GetUserByAccountAsync(string account);
         Task<ICollection<User>> GetUsersAsync();
+        Task<ICollection<User>> GetTeachersAsync();
         Task<ICollection<User>> GetUsersByClassIdAsync(string classId);
         Task<User> CreateUserAsync(UserCreateDto user);
         Task<User> UpdateUserAsync(UserUpdateDto user);

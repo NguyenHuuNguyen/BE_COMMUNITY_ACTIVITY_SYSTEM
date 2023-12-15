@@ -15,15 +15,18 @@
             public const string CLASS_NOT_FOUND = "Class not found.";
             public const string DATE_MUST_BE_EARLIER_THAN_CURRENT_TIME = "{0} must be a valid date and earlier than the current date.";
             public const string TEXT_ONLY = "{0} is text only field.";
+            public const string TEXT_AND_NUMBER_ONLY = "{0} is text and number only field.";
             public const string INVALID_GENDER = "Gender is invalid. Please input from 1 to 3.";
             public const string INVALID_FIELD = "{0} is invalid";
             public const string INVALID_GUID = "{0} is invalid GUID.";
             public const string TEACHER_CAN_NOT_HAVE_CLASS = "Teacher can not have class asigned to";
+            public const string PASSWORD_NOT_MATCHES = "Password is not matching with ConfirmPassword.";
         }
 
         public static class Regexes
         {
             public const string TEXT_ONLY = "^[a-zA-Z ]+$";
+            public const string TEXT_AND_NUMBER_ONLY = "^[a-zA-Z0-9]*$";
             public const string PHONE_NUMBER = @"^\+(?:[0-9] ?){6,14}[0-9]$";
             public const string EMAIL = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
             public const string WEBSITE_LINK = @"^(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?$";

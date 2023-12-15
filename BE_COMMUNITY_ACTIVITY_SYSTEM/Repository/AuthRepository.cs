@@ -3,21 +3,60 @@ using BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Claims;
 using System.Security.Cryptography;
 
 namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
 {
-    public class AccountRepository : IAccountRepository
+    public class AuthRepository : IAuthRepository
     {
         private readonly DataContext _context;
         private readonly ICommonRepository _commonRepository;
+        private readonly IConfiguration _configuration;
 
-        public AccountRepository(DataContext context, ICommonRepository commonRepository)
+        public AuthRepository(DataContext context, ICommonRepository commonRepository, IConfiguration configuration)
         {
             _context = context;
             _commonRepository = commonRepository;
+            _configuration = configuration;
         }
+
+        public async Task<string> CreateToken(User user)
+        {
+            bool isStudent = false;
+            if (user.StudentId != null && user.TeacherId == null)
+            {
+                isStudent = true;
+            }
+
+            ICollection<string> roles = await GetRolesOfUser(user.Id!);
+
+            List<Claim> claims = new()
+            {
+                new Claim("UserId", user.Id!),
+                new Claim("FirstName", user.FirstName!),
+                new Claim("IsStudent", isStudent.ToString())
+            };
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddHours(3),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            return jwt;
+        }
+
         public async Task<bool> AsignRoleAsync(string userId, string roleName)
         {
             var roleUser = await _context.RoleUsers.Include(x => x.Role).FirstOrDefaultAsync(x => userId.Equals(x.UserId)
@@ -70,9 +109,9 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public bool CheckLogin(string account, string password)
+        public async Task<bool> CheckLogin(string account, string password)
         {
-            var user = _context.Users.FirstOrDefault(x => account.Equals(x.StudentId) || account.Equals(x.TeacherId));
+            var user = await _context.Users.FirstOrDefaultAsync(x => account.Equals(x.StudentId) || account.Equals(x.TeacherId));
 
             if (user == null || user.PasswordHash == null || user.PasswordSalt == null)
             {
