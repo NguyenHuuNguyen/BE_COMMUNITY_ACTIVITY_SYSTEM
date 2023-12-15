@@ -68,6 +68,10 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Data
                 .HasOne(u => u.Class)
                 .WithMany(c => c.Users)
                 .HasForeignKey(u => u.ClassId);
+
+            modelBuilder.Entity<Role>()
+                .HasIndex(r => r.RoleName)
+                .IsUnique();
         }
     }
 }

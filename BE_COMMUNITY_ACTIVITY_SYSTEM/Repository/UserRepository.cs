@@ -130,7 +130,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             var nextNumber = 1;
             if (lastStudent != null)
             {
-                var lastNumberStr = lastStudent.StudentId?.Substring(Constants.Users.STUDENT_ID_PREFIX.Length);
+                var lastNumberStr = lastStudent.StudentId?[Constants.Users.STUDENT_ID_PREFIX.Length..];
                 if (int.TryParse(lastNumberStr, out var lastNumber))
                 {
                     nextNumber = lastNumber + 1;
@@ -153,7 +153,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             var nextNumber = 1;
             if (lastTeacher != null)
             {
-                var lastNumberStr = lastTeacher.TeacherId?.Substring(Constants.Users.TEACHER_ID_PREFIX.Length);
+                var lastNumberStr = lastTeacher.TeacherId?[Constants.Users.TEACHER_ID_PREFIX.Length..];
                 if (int.TryParse(lastNumberStr, out var lastNumber))
                 {
                     nextNumber = lastNumber + 1;
