@@ -2,7 +2,7 @@
 {
     public class BasePaginationDto<T>
     {
-        public IEnumerable<T>? Data { get; set; }
+        public ICollection<T>? Data { get; set; }
         public int TotalItems { get; set; }
         public int TotalPages { get; set; }
         public int ItemPerPage { get; set; }

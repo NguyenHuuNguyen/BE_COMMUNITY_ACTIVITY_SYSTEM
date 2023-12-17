@@ -18,7 +18,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .Must(classId => classId == null || _commonRepository.IsGuid(classId))
                 .WithMessage(string.Format(Constants.ErrorMessages.INVALID_GUID, "ClassId"))
                 .Must(classId => classId == null || _classRepository.CheckClassExists(classId))
-                .WithMessage(Constants.ErrorMessages.CLASS_NOT_FOUND)
+                .WithMessage(string.Format(Constants.ErrorMessages.NOT_FOUND, "Class"))
                 .Must((dto, classId) => dto.IsStudent || classId == null)
                 .WithMessage(Constants.ErrorMessages.TEACHER_CAN_NOT_HAVE_CLASS);
 

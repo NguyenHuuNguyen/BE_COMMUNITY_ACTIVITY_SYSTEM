@@ -18,19 +18,18 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         private readonly IMapper _mapper;
         private readonly ICommonRepository _commonRepository;
         private readonly IClassRepository _classRepository;
+        private readonly IAuthRepository _authRepository;
 
-        public UserController(IUserRepository userRepository, IMapper mapper, ICommonRepository commonRepository, IClassRepository classRepository)
+        public UserController(IUserRepository userRepository, IMapper mapper, ICommonRepository commonRepository, IClassRepository classRepository, IAuthRepository authRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _commonRepository = commonRepository;
             _classRepository = classRepository;
+            _authRepository = authRepository;
         }
 
-        //
-        //test
-        //
-        [HttpGet, Authorize(Roles = SINH_VIEN + "," + TRUONG_KHOA)]
+        [HttpGet]
         [ProducesResponseType(200, Type = typeof(UserGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         [ProducesResponseType(404)]
@@ -51,11 +50,17 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
                 return NotFound();
             }
 
+            var tokenUserId = HttpContext.User.FindFirst("UserId")!.Value;
+            if (await _authRepository.CheckUserAuthorizedForActionAsync(tokenUserId, userId))
+            {
+                return Forbid();
+            }
+
             var user = _mapper.Map<UserGetDto>(await _userRepository.GetUserByIdAsync(userId));
             return Ok(user);
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = ADMIN)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<UserGetDto>))]
         public async Task<IActionResult> GetUsersList()
         {
@@ -63,7 +68,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             return Ok(users);
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = ADMIN)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<UserGetDto>))]
         public async Task<IActionResult> GetTeachersList()
         {
@@ -96,7 +101,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             return Ok(users);
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(Roles = ADMIN)]
         [ProducesResponseType(204)]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         [ProducesResponseType(404)]
@@ -121,7 +126,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             return NoContent();
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = ADMIN)]
         [ProducesResponseType(200, Type = typeof(UserGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         public async Task<IActionResult> CreateUser([FromBody] UserCreateDto userCreate)
@@ -135,11 +140,17 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDto userUpdate)
         {
+            var tokenUserId = HttpContext.User.FindFirst("UserId")!.Value;
+            if (await _authRepository.CheckUserAuthorizedForActionAsync(tokenUserId, userUpdate.Id!))
+            {
+                return Forbid();
+            }
+
             var user = _mapper.Map<UserGetDto>(await _userRepository.UpdateUserAsync(userUpdate));
             return Ok(user);
         }
 
-        [HttpPatch]
+        [HttpPatch, Authorize(Roles = ADMIN)]
         [ProducesResponseType(200, Type = typeof(UserGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         public async Task<IActionResult> UpdateUserStatus([FromBody] UserStatusUpdateDto updateData)

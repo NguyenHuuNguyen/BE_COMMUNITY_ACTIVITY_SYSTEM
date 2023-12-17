@@ -1,6 +1,7 @@
 ﻿using BE_COMMUNITY_ACTIVITY_SYSTEM.Data;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Models;
+using BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -126,9 +127,28 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return _context.Roles.Any(x => roleName.Equals(x.RoleName) && x.IsDeleted == false);
         }
 
-        public bool CheckUserHasRole(string userId, string roleName)
+        public async Task<bool> CheckUserHasRoleAsync(string userId, string roleName)
         {
-            return _context.RoleUsers.Any(ru => userId.Equals(ru.UserId) && ru.IsDeleted == false && roleName.Equals(ru.Role!.RoleName));
+            return await _context.RoleUsers.AnyAsync(ru => userId.Equals(ru.UserId) && ru.IsDeleted == false && roleName.Equals(ru.Role!.RoleName));
+        }
+
+        public async Task<bool> CheckUserAuthorizedForActionAsync(string tokenUserId, string targetUserId)
+        {
+            var isAdmin = await CheckUserHasRoleAsync(tokenUserId, Constants.Roles.ADMIN);
+            var isSameUser = tokenUserId.Equals(targetUserId);
+            return isAdmin || isSameUser;
+        }
+
+        public async Task<bool> CheckAccountLockedAsync(string account)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => account.Equals(x.StudentId) || account.Equals(x.TeacherId));
+
+            if (user == null || user.PasswordHash == null || user.PasswordSalt == null)
+            {
+                return false;
+            }
+
+            return user.Status == (int)Constants.Status.ACCOUNT_LOCKED;
         }
 
         public async Task<bool> RevokeRoleAsync(string userId, string roleName)

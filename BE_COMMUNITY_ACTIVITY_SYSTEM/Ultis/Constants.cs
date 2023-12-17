@@ -2,6 +2,11 @@
 {
     public static class Constants
     {
+        public enum Status
+        {
+            ACCOUNT_LOCKED = -1
+        }
+
         public static class Users
         {
             public const string STUDENT_ID_PREFIX = "SV";
@@ -11,8 +16,7 @@
         public static class ErrorMessages
         {
             public const string STRING_FIXED_LENGTH = "{0} field must have a fixed length of {1} characters.";
-            public const string USER_NOT_FOUND = "User not found.";
-            public const string CLASS_NOT_FOUND = "Class not found.";
+            public const string NOT_FOUND = "{0} not found.";
             public const string DATE_MUST_BE_EARLIER_THAN_CURRENT_TIME = "{0} must be a valid date and earlier than the current date.";
             public const string TEXT_ONLY = "{0} is text only field.";
             public const string TEXT_AND_NUMBER_ONLY = "{0} is text and number only field.";
@@ -20,7 +24,7 @@
             public const string INVALID_FIELD = "{0} is invalid";
             public const string INVALID_GUID = "{0} is invalid GUID.";
             public const string TEACHER_CAN_NOT_HAVE_CLASS = "Teacher can not have class asigned to";
-            public const string PASSWORD_NOT_MATCHES = "Password is not matching with ConfirmPassword.";
+            public const string PASSWORD_NOT_MATCHES = "Password does not matches with ConfirmPassword.";
         }
 
         public static class Regexes

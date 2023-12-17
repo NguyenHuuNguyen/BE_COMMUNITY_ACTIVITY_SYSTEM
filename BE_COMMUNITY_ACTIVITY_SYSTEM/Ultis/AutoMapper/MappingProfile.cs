@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Announcement;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Models;
@@ -13,6 +14,11 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.AutoMapper
             CreateMap<User, UserGetDto>();
             CreateMap<UserCreateDto, User>();
             CreateMap<UserUpdateDto, User>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<Announcement, AnnouncementGetDto>();
+            CreateMap<AnnouncementCreateDto, Announcement>();
+            CreateMap<AnnouncementUpdateDto, Announcement>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }

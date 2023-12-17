@@ -27,6 +27,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         {
             var newUser = _mapper.Map<User>(user);
             newUser.Id= Guid.NewGuid().ToString();
+            newUser.CreatedAt = DateTime.Now;
+            newUser.UpdatedAt = DateTime.Now;
 
             byte[] passwordHash, passwordSalt;
 
@@ -89,7 +91,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
 
         public async Task<ICollection<User>> GetTeachersAsync()
         {
-            return await _context.Users.Where(u => !u.IsDeleted && u.TeacherId != null).ToListAsync();
+            return await _context.Users.Where(u => !u.IsDeleted && u.TeacherId != null && u.StudentId == null).ToListAsync();
         }
 
         public async Task<ICollection<User>> GetUsersByClassIdAsync(string classId)
@@ -112,11 +114,15 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         public async Task<User> UpdateUserAsync(UserUpdateDto userUpdate)
         {
             var currentUser = await _context.Users.FirstOrDefaultAsync(cu => userUpdate.Id!.Equals(cu.Id) && !cu.IsDeleted);
+
             if (currentUser == null)
             {
                 return null!;
             }
+
             _mapper.Map(userUpdate, currentUser);
+            currentUser.UpdatedAt = DateTime.Now;
+
             await _context.SaveChangesAsync();
             return currentUser;
         }

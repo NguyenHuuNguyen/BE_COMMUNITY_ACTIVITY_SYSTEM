@@ -5,10 +5,13 @@ using AutoMapper;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Auth;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Models;
+using Microsoft.AspNetCore.Authorization;
+using BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis;
 
 namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]/[action]")]
     public class AuthController : Controller
     {
@@ -21,14 +24,20 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpPost]
+        [HttpPost, AllowAnonymous]
         [ProducesResponseType(200, Type = typeof(string))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
             if (await _authRepository.CheckLogin(dto.AccountId!, dto.Password!))
             {
+                if(await _authRepository.CheckAccountLockedAsync(dto.AccountId!))
+                {
+                    return Forbid();
+                }
+
                 var user = await _userRepository.GetUserByAccountAsync(dto.AccountId!);
                 var token = await _authRepository.CreateToken(user);
                 return Ok(token);
@@ -44,6 +53,12 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
         {
+            var tokenUserId = HttpContext.User.FindFirst("UserId")!.Value;
+            if (await _authRepository.CheckUserAuthorizedForActionAsync(tokenUserId, dto.UserId!))
+            {
+                return Forbid();
+            }
+
             await _authRepository.ChangePasswordAsync(dto.UserId!, dto.Password!);
             var user = await _userRepository.GetUserByIdAsync(dto.UserId!);
             var token = _authRepository.CreateToken(user);

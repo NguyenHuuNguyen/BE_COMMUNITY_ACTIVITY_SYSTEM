@@ -18,7 +18,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
             .Must(userId => userId == null || _commonRepository.IsGuid(userId))
             .WithMessage(string.Format(Constants.ErrorMessages.INVALID_GUID, "UserId"))
             .Must(x => x == null || _userRepository.CheckUserExists(x))
-            .WithMessage(Constants.ErrorMessages.USER_NOT_FOUND);
+            .WithMessage(string.Format(Constants.ErrorMessages.NOT_FOUND, "User"));
 
             RuleFor(x => x.Password)
                 .Equal(x => x.PasswordConfirm)

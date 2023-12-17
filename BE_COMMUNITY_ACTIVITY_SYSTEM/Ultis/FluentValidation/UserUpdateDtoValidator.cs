@@ -21,13 +21,13 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .Must(userId => userId == null || _commonRepository.IsGuid(userId))
                 .WithMessage(string.Format(Constants.ErrorMessages.INVALID_GUID, "Id"))
                 .Must(userId => userId == null || _userRepository.CheckUserExists(userId))
-                .WithMessage(Constants.ErrorMessages.USER_NOT_FOUND);
+                .WithMessage(string.Format(Constants.ErrorMessages.NOT_FOUND, "User"));
 
             RuleFor(x => x.ClassId)
                 .Must(classId => classId == null || _commonRepository.IsGuid(classId))
                 .WithMessage(string.Format(Constants.ErrorMessages.INVALID_GUID, "ClassId"))
                 .Must(classId => classId == null || _classRepository.CheckClassExists(classId))
-                .WithMessage(Constants.ErrorMessages.CLASS_NOT_FOUND)
+                .WithMessage(string.Format(Constants.ErrorMessages.NOT_FOUND, "Class"))
                 .Must((dto, classId) => (dto.Id != null && userRepository.CheckUserIsStudent(dto.Id)) || classId == null)
                 .WithMessage(Constants.ErrorMessages.TEACHER_CAN_NOT_HAVE_CLASS);
 
