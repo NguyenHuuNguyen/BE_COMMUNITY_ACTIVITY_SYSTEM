@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Announcement;
-using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces;
-using BE_COMMUNITY_ACTIVITY_SYSTEM.Models;
-using BE_COMMUNITY_ACTIVITY_SYSTEM.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.Constants;
@@ -58,8 +55,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         public async Task<IActionResult> UpdateAnnouncement([FromBody] AnnouncementUpdateDto dto)
         {
-            var user = _mapper.Map<AnnouncementGetDto>(await _announcementRepository.UpdateAnnouncementAsync(dto));
-            return Ok(user);
+            var announcement = _mapper.Map<AnnouncementGetDto>(await _announcementRepository.UpdateAnnouncementAsync(dto));
+            return Ok(announcement);
         }
 
         [HttpDelete, Authorize(Roles = ADMIN)]
