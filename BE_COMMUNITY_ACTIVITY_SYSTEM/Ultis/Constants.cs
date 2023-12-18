@@ -25,6 +25,9 @@
             public const string INVALID_GUID = "{0} is invalid GUID.";
             public const string TEACHER_CAN_NOT_HAVE_CLASS = "Teacher can not have class asigned to";
             public const string PASSWORD_NOT_MATCHES = "Password does not matches with ConfirmPassword.";
+            public const string INVALID_MINSCORE = "MinScore is invalid. Please input from 0 to 700.";
+            public const string INVALID_MAXSCORE = "MaxScore is invalid. Please input from 0 to 700.";
+            public const string MAXSCORE_MUST_BE_GREATER_THAN_MINSCORE = "MaxScore must be greater than or equal to MinScore";
         }
 
         public static class Regexes
