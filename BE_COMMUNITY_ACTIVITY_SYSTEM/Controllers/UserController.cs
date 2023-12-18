@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto;
+using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Announcement;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces;
+using BE_COMMUNITY_ACTIVITY_SYSTEM.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.Constants;
@@ -76,6 +78,14 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             return Ok(users);
         }
 
+        [HttpGet, Authorize(Roles = ADMIN)]
+        [ProducesResponseType(200, Type = typeof(BasePaginationDto<UserGetDto>))]
+        public async Task<IActionResult> GetTeachersPaginationList([FromQuery] BasePaginationRequestDto dto)
+        {
+            var users = await _userRepository.GetTeachersPaginationAsync(dto);
+            return Ok(users);
+        }
+
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<UserGetDto>))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
@@ -97,7 +107,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
                 return NotFound();
             }
 
-            var users = _mapper.Map<List<UserGetDto>>(await _userRepository.GetUsersByClassIdAsync(classId));
+            var users = _mapper.Map<List<UserGetDto>>(await _userRepository.GetStudentsByClassIdAsync(classId));
             return Ok(users);
         }
 

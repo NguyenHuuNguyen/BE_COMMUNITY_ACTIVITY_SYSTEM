@@ -59,22 +59,20 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
 
         public async Task<BasePaginationDto<CommunityActivityTypeGetDto>> GetCommunityActivityTypesPaginationAsync(BasePaginationRequestDto dto)
         {
-            int itemPerPage = dto.ItemPerPage <= 0 ? 10 : dto.ItemPerPage;
-            int page = dto.Page <= 0 ? 1 : dto.Page;
-            dto.Filter = dto.Filter == null ? String.Empty : dto.Filter.ToLower();
+            dto.ValidateInput();
 
             int totalItems = await _context.CommunityActivityTypes.CountAsync(a => a.IsDeleted == false);
-            int totalPages = (int)Math.Ceiling((double)totalItems / itemPerPage);
-            page = Math.Min(page, totalPages);
-            int skipCount = (page - 1) * itemPerPage;
-            bool isNextPage = skipCount + itemPerPage < totalItems;
-            bool isPreviousPage = page > 1;
+            int totalPages = (int)Math.Ceiling((double)totalItems / dto.ItemPerPage);
+            dto.Page = Math.Min(dto.Page, totalPages);
+            int skipCount = (dto.Page - 1) * dto.ItemPerPage;
+            bool isNextPage = skipCount + dto.ItemPerPage < totalItems;
+            bool isPreviousPage = dto.Page > 1;
 
             var communityActivityTypes = await _context.CommunityActivityTypes
-                .Where(a => a.Name!.ToLower().Contains(dto.Filter) && a.IsDeleted == false)
+                .Where(a => a.Name!.ToLower().Contains(dto.Filter!) && a.IsDeleted == false)
                 .OrderByDescending(a => a.CreatedAt)
                 .Skip(skipCount)
-                .Take(itemPerPage)
+                .Take(dto.ItemPerPage)
                 .ToListAsync();
 
             var communityActivityTypeDtos = _mapper.Map<List<CommunityActivityTypeGetDto>>(communityActivityTypes);
@@ -84,8 +82,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
                 Data = communityActivityTypeDtos,
                 TotalItems = totalItems,
                 TotalPages = totalPages,
-                ItemPerPage = itemPerPage,
-                CurrentPage = page,
+                ItemPerPage = dto.ItemPerPage,
+                CurrentPage = dto.Page,
                 IsNextPage = isNextPage,
                 IsPreviousPage = isPreviousPage
             };

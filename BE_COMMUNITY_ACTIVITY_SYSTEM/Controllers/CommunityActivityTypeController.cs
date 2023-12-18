@@ -25,15 +25,15 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             _commonRepository = commonRepository;
         }
 
-        [HttpGet, Authorize(Roles = ADMIN)]
+        [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<CommunityActivityTypeGetDto>))]
-        public async Task<IActionResult> GetCommunityActivitysList()
+        public async Task<IActionResult> GetCommunityActivityTypesList()
         {
             var communityActivityType = _mapper.Map<List<CommunityActivityTypeGetDto>>(await _communityActivityTypeRepository.GetCommunityActivityTypeAsync());
             return Ok(communityActivityType);
         }
 
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         [ProducesResponseType(200, Type = typeof(BasePaginationDto<CommunityActivityTypeGetDto>))]
         public async Task<IActionResult> GetCommunityActivityTypesPaginationList([FromQuery] BasePaginationRequestDto dto)
         {

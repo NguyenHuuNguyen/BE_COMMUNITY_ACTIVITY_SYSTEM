@@ -25,7 +25,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         }
 
         [HttpPost, AllowAnonymous]
-        [ProducesResponseType(200, Type = typeof(string))]
+        [ProducesResponseType(200, Type = typeof(LoginSuccessDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -40,7 +40,13 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
 
                 var user = await _userRepository.GetUserByAccountAsync(dto.AccountId!);
                 var token = await _authRepository.CreateToken(user);
-                return Ok(token);
+                var returnData = new LoginSuccessDto()
+                {
+                    IsSuccess = true,
+                    Token = token,
+                };
+
+                return Ok(returnData);
             }
             else
             {

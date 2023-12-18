@@ -1,4 +1,5 @@
-﻿using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User;
+﻿using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto;
+using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Models;
 
 namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
@@ -9,7 +10,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
         Task<User> GetUserByAccountAsync(string account);
         Task<ICollection<User>> GetUsersAsync();
         Task<ICollection<User>> GetTeachersAsync();
-        Task<ICollection<User>> GetUsersByClassIdAsync(string classId);
+        Task<BasePaginationDto<UserGetDto>> GetTeachersPaginationAsync(BasePaginationRequestDto dto);
+        Task<ICollection<User>> GetStudentsByClassIdAsync(string classId);
         Task<User> CreateUserAsync(UserCreateDto user);
         Task<User> UpdateUserAsync(UserUpdateDto user);
         Task<User> UpdateUserStatusAsync(string userId, int status);

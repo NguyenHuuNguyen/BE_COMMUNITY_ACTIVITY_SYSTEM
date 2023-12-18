@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Data;
+using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto;
+using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Announcement;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Models;
@@ -94,7 +96,44 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return await _context.Users.Where(u => !u.IsDeleted && u.TeacherId != null && u.StudentId == null).ToListAsync();
         }
 
-        public async Task<ICollection<User>> GetUsersByClassIdAsync(string classId)
+        public async Task<BasePaginationDto<UserGetDto>> GetTeachersPaginationAsync(BasePaginationRequestDto dto)
+        {
+            dto.ValidateInput();
+
+            int totalItems = await _context.Users.CountAsync(a => a.IsDeleted == false && a.TeacherId != null && a.StudentId == null);
+            int totalPages = (int)Math.Ceiling((double)totalItems / dto.ItemPerPage);
+            dto.Page = Math.Min(dto.Page, totalPages);
+            int skipCount = (dto.Page - 1) * dto.ItemPerPage;
+            bool isNextPage = skipCount + dto.ItemPerPage < totalItems;
+            bool isPreviousPage = dto.Page > 1;
+
+            var users = await _context.Users
+                .Where(u => u.IsDeleted == false 
+                            && u.TeacherId != null 
+                            && u.StudentId == null 
+                            && (string.Concat(u.TeacherId, u.FirstName, " ", u.LastName).ToLower().Contains(dto.Filter!)))
+                .OrderByDescending(a => a.CreatedAt)
+                .Skip(skipCount)
+                .Take(dto.ItemPerPage)
+                .ToListAsync();
+
+            var userDtos = _mapper.Map<List<UserGetDto>>(users);
+
+            var paginationResult = new BasePaginationDto<UserGetDto>
+            {
+                Data = userDtos,
+                TotalItems = totalItems,
+                TotalPages = totalPages,
+                ItemPerPage = dto.ItemPerPage,
+                CurrentPage = dto.Page,
+                IsNextPage = isNextPage,
+                IsPreviousPage = isPreviousPage
+            };
+
+            return paginationResult;
+        }
+
+        public async Task<ICollection<User>> GetStudentsByClassIdAsync(string classId)
         {
             return await _context.Users.Where(u => !u.IsDeleted && classId.Equals(u.ClassId)).ToListAsync();
         }

@@ -25,7 +25,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             _commonRepository = commonRepository;
         }
 
-        [HttpGet, Authorize(Roles = ADMIN)]
+        [HttpGet, AllowAnonymous]
         [ProducesResponseType(200, Type = typeof(IEnumerable<AnnouncementGetDto>))]
         public async Task<IActionResult> GetAnnouncementsList()
         {
