@@ -32,7 +32,7 @@
 
         public static class Regexes
         {
-            public const string TEXT_ONLY = "^[a-zA-Z ]+$";
+            public const string TEXT_ONLY = "^[a-zA-ZÀ-Ỹà-ỹ ]+$";
             public const string TEXT_AND_NUMBER_ONLY = "^[a-zA-Z0-9]*$";
             public const string PHONE_NUMBER = @"^\+(?:[0-9] ?){6,14}[0-9]$";
             public const string EMAIL = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
