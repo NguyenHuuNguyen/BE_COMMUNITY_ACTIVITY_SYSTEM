@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Announcement;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.CommunityActivityType;
+using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Major;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User;
-using BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Models;
-using BE_COMMUNITY_ACTIVITY_SYSTEM.Repository;
 
 namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.AutoMapper
 {
@@ -25,6 +24,13 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.AutoMapper
             CreateMap<CommunityActivityType, CommunityActivityTypeGetDto>();
             CreateMap<CommunityActivityTypeCreateDto, CommunityActivityType>();
             CreateMap<CommunityActivityTypeUpdateDto, CommunityActivityType>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<Major, MajorGetDto>()
+                .ForMember(dest => dest.MajorHeadFullName, opt =>
+                    opt.MapFrom(src => string.Concat(src.MajorHead!.FirstName, " ", src.MajorHead.LastName)));
+            CreateMap<MajorCreateDto, Major>();
+            CreateMap<MajorUpdateDto, Major>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
