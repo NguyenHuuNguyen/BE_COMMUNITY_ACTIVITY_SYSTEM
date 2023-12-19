@@ -7,14 +7,14 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User
         public string? ClassId { get; set; }
         [Required]
         public string? Id { get; set; }
-        public string? LastName { get; set; }
         [Required]
         public string? FirstName { get; set; }
+        public string? LastName { get; set; }
         [Required]
         public DateTime DateOfBirth { get; set; }
         public string? PlaceOfBirth { get; set; }
         [Required]
-        public int Gender { get; set; }
+        public bool Gender { get; set; }
         public string? Ethnic { get; set; }
         public string? Nationality { get; set; }
         [Required]

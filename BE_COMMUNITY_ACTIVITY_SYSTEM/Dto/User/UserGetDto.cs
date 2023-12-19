@@ -4,11 +4,11 @@
     {
         public string? ClassId { get; set; }
         public string? Id { get; set; }
-        public string? LastName { get; set; }
         public string? FirstName { get; set; }
+        public string? LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string? PlaceOfBirth { get; set; }
-        public int Gender { get; set; }
+        public bool Gender { get; set; }
         public string? Ethnic { get; set; }
         public string? Nationality { get; set; }
         public string? IdentificationCardId { get; set; }
@@ -25,6 +25,5 @@
         public string? District { get; set; }
         public string? Ward { get; set; }
         public string? Street { get; set; }
-        public List<string>? Roles { get; set; }
     }
 }

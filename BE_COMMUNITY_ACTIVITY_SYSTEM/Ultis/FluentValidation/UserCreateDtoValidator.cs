@@ -22,10 +22,6 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .Must((dto, classId) => dto.IsStudent || classId == null)
                 .WithMessage(Constants.ErrorMessages.TEACHER_CAN_NOT_HAVE_CLASS);
 
-            RuleFor(x => x.IdentificationCardIssueDate)
-                .Must(icid => icid < DateTime.Now)
-                .WithMessage(string.Format(Constants.ErrorMessages.DATE_MUST_BE_EARLIER_THAN_CURRENT_TIME, "IdentificationCardIssueDate"));
-
             RuleFor(x => x.LastName)
                 .Matches(Constants.Regexes.TEXT_ONLY)
                 .WithMessage(string.Format(Constants.ErrorMessages.TEXT_ONLY, "Last Name"));
@@ -34,9 +30,9 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .Matches(Constants.Regexes.TEXT_ONLY)
                 .WithMessage(string.Format(Constants.ErrorMessages.TEXT_ONLY, "First Name"));
 
-            RuleFor(x => x.Nationality)
-                .Matches(Constants.Regexes.TEXT_ONLY)
-                .WithMessage(string.Format(Constants.ErrorMessages.TEXT_ONLY, "Nationality"));
+            RuleFor(x => x.DateOfBirth)
+                .Must( dob => dob < DateTime.Now)
+                .WithMessage(string.Format(Constants.ErrorMessages.DATE_MUST_BE_EARLIER_THAN_CURRENT_TIME, "Date of Birth"));
         }
     }
 }

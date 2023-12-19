@@ -51,7 +51,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.Now.AddHours(24),
                 signingCredentials: creds);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
@@ -61,8 +61,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         public async Task<bool> AsignRoleAsync(string userId, string roleName)
         {
             var roleUser = await _context.RoleUsers.Include(x => x.Role).FirstOrDefaultAsync(x => userId.Equals(x.UserId)
-                                                                                            && roleName.Equals(x.Role!.RoleName)
-                                                                                            && x.IsDeleted == false);
+                                                                                            && roleName.Equals(x.Role!.RoleName));
 
             if (roleUser == null)
             {
@@ -154,8 +153,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         public async Task<bool> RevokeRoleAsync(string userId, string roleName)
         {
             var roleUser = await _context.RoleUsers.Include(x => x.Role).FirstOrDefaultAsync(x => userId.Equals(x.UserId)
-                                                                                            && roleName.Equals(x.Role!.RoleName)
-                                                                                            && x.IsDeleted == false);
+                                                                                            && roleName.Equals(x.Role!.RoleName));
 
             if (roleUser == null)
             {

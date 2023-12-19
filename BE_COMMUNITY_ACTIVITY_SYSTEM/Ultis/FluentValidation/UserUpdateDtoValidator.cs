@@ -43,10 +43,6 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .Must(IsValidDate)
                 .WithMessage(string.Format(Constants.ErrorMessages.DATE_MUST_BE_EARLIER_THAN_CURRENT_TIME, "Date of Birth"));
 
-            RuleFor(x => x.Gender)
-                .InclusiveBetween(1, 3)
-                .WithMessage(Constants.ErrorMessages.INVALID_GENDER);
-
             RuleFor(x => x.Ethnic)
                 .Matches(Constants.Regexes.TEXT_ONLY)
                 .WithMessage(string.Format(Constants.ErrorMessages.TEXT_ONLY, "Ethnic"));

@@ -12,7 +12,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Models
         public String? FirstName { get; set;}
         public DateTime DateOfBirth { get; set; }
         public String? PlaceOfBirth { get; set; }
-        public int Gender { get; set; }
+        public Boolean Gender { get; set; }
         public String? Ethnic { get; set; }
         public String? Nationality { get; set; }
         public String? IdentificationCardId { get; set; }

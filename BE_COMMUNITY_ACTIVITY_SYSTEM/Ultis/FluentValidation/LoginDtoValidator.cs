@@ -9,7 +9,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
         public LoginDtoValidator()
         {
             RuleFor(x => x.AccountId)
-                .Matches(Constants.Regexes.TEXT_AND_NUMBER_ONLY)
+                .Matches(Constants.Regexes.ACCOUNT_ID)
                 .WithMessage(string.Format(Constants.ErrorMessages.TEXT_AND_NUMBER_ONLY, "AccountId"));
         }
     }
