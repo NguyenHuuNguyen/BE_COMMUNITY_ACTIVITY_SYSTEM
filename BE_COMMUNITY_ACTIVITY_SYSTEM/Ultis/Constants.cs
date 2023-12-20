@@ -27,6 +27,7 @@
             public const string INVALID_MINSCORE = "MinScore is invalid. Please input from 0 to 700.";
             public const string INVALID_MAXSCORE = "MaxScore is invalid. Please input from 0 to 700.";
             public const string MAXSCORE_MUST_BE_GREATER_THAN_MINSCORE = "MaxScore must be greater than or equal to MinScore";
+            public const string INVALID_MAJORHEAD = "Student can not be Major head";
         }
 
         public static class Regexes
