@@ -20,7 +20,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .Must(majorHeadId => majorHeadId == null || _userRepository.CheckUserExists(majorHeadId))
                 .WithMessage(string.Format(Constants.ErrorMessages.NOT_FOUND, "User"))
                 .Must(majorHeadId => majorHeadId == null || _userRepository.CheckUserIsStudent(majorHeadId) == false)
-                .WithMessage(string.Format(Constants.ErrorMessages.INVALID_MAJORHEAD, "MajorHead"));
+                .WithMessage(string.Format(Constants.ErrorMessages.INVALID_HEAD, "MajorHead"));
         }
     }
 }
