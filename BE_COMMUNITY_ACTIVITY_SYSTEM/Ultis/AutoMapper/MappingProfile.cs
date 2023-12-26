@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Announcement;
+using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Class;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.CommunityActivityType;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Major;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User;
@@ -32,6 +33,18 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.AutoMapper
             CreateMap<MajorCreateDto, Major>();
             CreateMap<MajorUpdateDto, Major>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<Class, ClassGetDto>()
+                .ForMember(dest => dest.MajorName, opt =>
+                    opt.MapFrom(src => string.Concat(src.Major!.Name)))
+                .ForMember(dest => dest.HeadTeacherFullName, opt =>
+                    opt.MapFrom(src => string.Concat(src.HeadTeacher!.FirstName, " ", src.HeadTeacher.LastName)))
+                .ForMember(dest => dest.ClassPresidentFullName, opt =>
+                    opt.MapFrom(src => src.ClassPresident != null ? string.Concat(src.ClassPresident.FirstName, " ", src.ClassPresident.LastName): string.Empty));
+            CreateMap<ClassCreateDto, Class>();
+            CreateMap<ClassUpdateDto, Class>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
         }
     }
 }

@@ -17,6 +17,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
         Task<User> UpdateUserStatusAsync(string userId, int status);
         Task<bool> DeleteUserAsync(string userId);
         Task<bool> CheckUserExistsAsync(string userId);
+        bool CheckStudentBelongToClass(string studentId, string classId);
         bool CheckUserExists(string userId);
         bool CheckUserIsStudent(string userId);
     }
