@@ -27,7 +27,6 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpPost, AllowAnonymous]
         [ProducesResponseType(200, Type = typeof(LoginSuccessDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
-        [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
