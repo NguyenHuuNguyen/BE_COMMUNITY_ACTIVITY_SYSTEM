@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Data;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto;
-using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Announcement;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Models;
@@ -186,6 +185,16 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return user.StudentId != null;
         }
 
+        public bool CheckStudentBelongToClass(string id, string classId)
+        {
+            var user = _context.Users.FirstOrDefault(u => id.Equals(u.Id) && classId.Equals(u.ClassId) && u.StudentId != null);
+            if (user == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
         private async Task<string> GetNextStudentId()
         {
             var lastStudent = await _context.Users
@@ -231,5 +240,6 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
 
             return nextTeacherId;
         }
+
     }
 }
