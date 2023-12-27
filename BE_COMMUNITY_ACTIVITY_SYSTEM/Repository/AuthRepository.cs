@@ -42,6 +42,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
                 new Claim("IsStudent", isStudent.ToString())
             };
 
+            claims.Add(new Claim(ClaimTypes.Role, "DEFAULT"));
+
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
@@ -147,7 +149,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
                 return false;
             }
 
-            return user.Status == (int)Constants.Status.ACCOUNT_LOCKED;
+            return user.Status == (int)Constants.Enums.ACCOUNT_LOCKED;
         }
 
         public async Task<bool> RevokeRoleAsync(string userId, string roleName)

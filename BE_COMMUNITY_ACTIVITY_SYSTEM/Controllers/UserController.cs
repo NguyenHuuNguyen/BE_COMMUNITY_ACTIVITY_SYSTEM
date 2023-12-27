@@ -34,6 +34,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(UserGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetUserByUserId([FromQuery] string userId)
         {
@@ -53,7 +54,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             }
 
             var tokenUserId = HttpContext.User.FindFirst("UserId")!.Value;
-            if (await _authRepository.CheckUserAuthorizedForActionAsync(tokenUserId, userId))
+            if (await _authRepository.CheckUserAuthorizedForActionAsync(tokenUserId, userId) == false)
             {
                 return Forbid();
             }
@@ -148,12 +149,18 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpPut]
         [ProducesResponseType(200, Type = typeof(UserGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
-        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDto userUpdate)
+        public async Task<IActionResult> UpdateUser([FromForm] UserUpdateDto userUpdate)
         {
             var tokenUserId = HttpContext.User.FindFirst("UserId")!.Value;
-            if (await _authRepository.CheckUserAuthorizedForActionAsync(tokenUserId, userUpdate.Id!))
+            if (await _authRepository.CheckUserAuthorizedForActionAsync(tokenUserId, userUpdate.Id!) == false)
             {
                 return Forbid();
+            }
+
+            
+            if (userUpdate.Avatar != null && userUpdate.Avatar.Length > 0)
+            {
+                await _userRepository.UploadAvatarAsync(userUpdate.Id!, userUpdate.Avatar);
             }
 
             var user = _mapper.Map<UserGetDto>(await _userRepository.UpdateUserAsync(userUpdate));
@@ -167,6 +174,48 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         {
             var user = _mapper.Map<UserGetDto>(await _userRepository.UpdateUserStatusAsync(updateData.UserId!, updateData.Status));
             return Ok(user);
+        }
+
+        [HttpGet, AllowAnonymous]
+        [ProducesResponseType(200, Type = typeof(string))]
+        [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(404)]
+        public IActionResult GetAvatar([FromQuery] string userId)
+        {
+            if (_commonRepository.IsGuid(userId) == false)
+            {
+                var errors = new Dictionary<string, List<string>>
+                {
+                    ["userId"] = new List<string> { string.Format(ErrorMessages.INVALID_GUID, "UserId") }
+                };
+
+                return _commonRepository.CreateBadRequestResponse(this, errors);
+            }
+
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), Users.AVATAR_PREFIX, $"{userId}.png");
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
+
+            return PhysicalFile(filePath, "image/png");
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200, Type = typeof(string))]
+        [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(403)]
+        public async Task<IActionResult> UploadAvatar([FromForm] UserUploadAvatarDto dto)
+        {
+            var tokenUserId = HttpContext.User.FindFirst("UserId")!.Value;
+            if (await _authRepository.CheckUserAuthorizedForActionAsync(tokenUserId, dto.UserId!) == false)
+            {
+                return Forbid();
+            }
+
+            var filePath = await _userRepository.UploadAvatarAsync(dto.UserId!, dto.Image!);
+            return Ok(filePath);
         }
     }
 }

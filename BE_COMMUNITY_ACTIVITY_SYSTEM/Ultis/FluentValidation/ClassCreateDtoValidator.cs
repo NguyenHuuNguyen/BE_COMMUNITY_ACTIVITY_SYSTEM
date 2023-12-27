@@ -32,8 +32,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .Matches(Constants.Regexes.CLASSNAME)
                 .WithMessage(string.Format(Constants.ErrorMessages.TEXT_NUMBER, "Name"));
             RuleFor(x => x.AcademicYear)
-                .Must(academicYear => academicYear >= DateTime.Now.Year)
-                .WithMessage(string.Format(Constants.ErrorMessages.INVALID_YEAR, "Academic Year"));
+                .Must(academicYear => academicYear >= (int)Constants.Enums.MIN_ACADEMIC_YEAR)
+                .WithMessage(Constants.ErrorMessages.INVALID_ACADEMIC_YEAR);
         }
     }
 }

@@ -2,15 +2,25 @@
 {
     public static class Constants
     {
-        public enum Status
+        public enum Enums
         {
-            ACCOUNT_LOCKED = -1
+            ACCOUNT_LOCKED = -1,
+            MIN_ACADEMIC_YEAR = 2017,
+        }
+
+        public enum CommunityActivityStatus
+        {
+            NEW = 0,
+            CLASS_PRESIDENT_CONFIRMED = 1,
+            HEAD_TEACHER_CONFIRMED = 2,
+            MAJOR_HEAD_CONFIRMED = 3,
         }
 
         public static class Users
         {
             public const string STUDENT_ID_PREFIX = "SV";
             public const string TEACHER_ID_PREFIX = "GV";
+            public const string AVATAR_PREFIX = "Avatar";
         }
 
         public static class ErrorMessages
@@ -28,12 +38,12 @@
             public const string PASSWORD_NOT_MATCHES = "Password does not matches with ConfirmPassword.";
             public const string INVALID_MINSCORE = "MinScore is invalid. Please input from 0 to 700.";
             public const string INVALID_MAXSCORE = "MaxScore is invalid. Please input from 0 to 700.";
-            public const string MAXSCORE_MUST_BE_GREATER_THAN_MINSCORE = "MaxScore must be greater than or equal to MinScore";
-            public const string INVALID_HEAD = "Student can not be {0}";
-            public const string INVALID_STUDENT = "Only student can be {0}";
-            public const string INVALID_CLASSPRESIDENT = "Class president must belong to class";
+            public const string MAXSCORE_MUST_BE_GREATER_THAN_MINSCORE = "MaxScore must be greater than or equal to MinScore.";
+            public const string INVALID_HEAD = "Student can not be {0}.";
+            public const string INVALID_STUDENT = "Only student can be {0}.";
+            public const string INVALID_CLASSPRESIDENT = "Class president must belong to class.";
             public const string INVALID_YEAR = "{0} must be a valid year and earlier or equal than the current year.";
-
+            public const string INVALID_ACADEMIC_YEAR = "Academic year must be higher than or equal to 2017.";
         }
 
         public static class Regexes

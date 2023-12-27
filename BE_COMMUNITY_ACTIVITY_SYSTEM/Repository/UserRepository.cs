@@ -195,6 +195,28 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return true;
         }
 
+        public async Task<string?> UploadAvatarAsync(string userId, IFormFile image)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => userId.Equals(u.Id) && !u.IsDeleted);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var fileName = $"{userId}.png";
+            var filePath = Path.Combine(Constants.Users.AVATAR_PREFIX, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+
+            return filePath;
+        }
+
+
         private async Task<string> GetNextStudentId()
         {
             var lastStudent = await _context.Users

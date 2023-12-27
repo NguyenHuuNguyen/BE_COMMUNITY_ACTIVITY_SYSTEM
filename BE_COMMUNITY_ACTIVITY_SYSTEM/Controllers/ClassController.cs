@@ -37,6 +37,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
 
         [HttpGet, AllowAnonymous]
         [ProducesResponseType(200, Type = typeof(BasePaginationDto<ClassGetDto>))]
+        [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         public async Task<IActionResult> GetClassesPaginationList([FromQuery] ClassPaginationRequestDto dto)
         {
             var classes = await _classRepository.GetClassPaginationAsync(dto);
@@ -46,6 +47,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpPost, Authorize(Roles = ADMIN)]
         [ProducesResponseType(200, Type = typeof(ClassGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> CreateClass([FromBody] ClassCreateDto dto)
         {
             var classes = _mapper.Map<ClassGetDto>(await _classRepository.CreateClassAsync(dto));
@@ -55,6 +58,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpPut, Authorize(Roles = ADMIN)]
         [ProducesResponseType(200, Type = typeof(ClassGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> UpdateClass([FromBody] ClassUpdateDto dto)
         {
             var classes = _mapper.Map<ClassGetDto>(await _classRepository.UpdateClassAsync(dto));
@@ -64,6 +69,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpPatch, Authorize(Roles = ADMIN + ", " + GIAO_VIEN)]
         [ProducesResponseType(200, Type = typeof(ClassAssignClassPresidentDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> UpdateClassPresident([FromBody] ClassAssignClassPresidentDto dto)
         {
             var tokenUserId = HttpContext.User.FindFirst("UserId")!.Value;
@@ -79,6 +86,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpDelete, Authorize(Roles = ADMIN)]
         [ProducesResponseType(204)]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteClass([FromQuery] string classId)
         {

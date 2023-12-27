@@ -27,6 +27,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpPost, AllowAnonymous]
         [ProducesResponseType(200, Type = typeof(LoginSuccessDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
@@ -59,7 +60,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
         {
             var tokenUserId = HttpContext.User.FindFirst("UserId")!.Value;
-            if (await _authRepository.CheckUserAuthorizedForActionAsync(tokenUserId, dto.UserId!))
+            if (await _authRepository.CheckUserAuthorizedForActionAsync(tokenUserId, dto.UserId!) == false)
             {
                 return Forbid();
             }

@@ -4,6 +4,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User
 {
     public class UserUpdateDto
     {
+        public IFormFile? Avatar { get; set; }
         public string? ClassId { get; set; }
         [Required]
         public string? Id { get; set; }
@@ -25,7 +26,6 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User
         public string? Phone { get; set; }
         public string? Email { get; set; }
         public string? Facebook { get; set; }
-        public int Status { get; set; }
         public string? City { get; set; }
         public string? District { get; set; }
         public string? Ward { get; set; }

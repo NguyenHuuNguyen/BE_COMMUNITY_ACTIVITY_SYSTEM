@@ -149,7 +149,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
                 .Include(c => c.HeadTeacher)
                 .Include(c => c.ClassPresident)
                 .Where(c => (dto.AcademyYear == null || dto.AcademyYear.Equals(c.AcademicYear)) &&
-                c.Major.Name.ToLower().Contains(dto.MajorName!) &&
+                c.Major!.Name!.ToLower().Contains(dto.MajorName!) &&
                 c.IsDeleted == false)
                 .OrderByDescending(a => a.CreatedAt)
                 .Skip(skipCount)
