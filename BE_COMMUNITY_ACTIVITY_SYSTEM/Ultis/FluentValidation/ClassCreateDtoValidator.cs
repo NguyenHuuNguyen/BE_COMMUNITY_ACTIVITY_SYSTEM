@@ -9,18 +9,21 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
         private readonly ICommonRepository _commonRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMajorRepository _majorRepository;
+        private readonly IClassRepository _classRepository;
 
-        public ClassCreateDtoValidator(ICommonRepository commonRepository, IUserRepository userRepository, IMajorRepository majorRepository)
+        public ClassCreateDtoValidator(ICommonRepository commonRepository, IUserRepository userRepository, IMajorRepository majorRepository, IClassRepository classRepository)
         {
             _commonRepository = commonRepository;
             _userRepository = userRepository;
             _majorRepository = majorRepository;
+            _classRepository = classRepository;
 
             RuleFor(x => x.MajorId)
                 .Must(majorId => majorId == null || _commonRepository.IsGuid(majorId))
                 .WithMessage(string.Format(Constants.ErrorMessages.INVALID_GUID, "Id"))
                 .Must(majorId => majorId == null || _majorRepository.CheckMajorExist(majorId))
                 .WithMessage(string.Format(Constants.ErrorMessages.NOT_FOUND, "Major"));
+
             RuleFor(x => x.HeadTeacherId)
                 .Must(headTeacherId => headTeacherId == null || _commonRepository.IsGuid(headTeacherId))
                 .WithMessage(string.Format(Constants.ErrorMessages.INVALID_GUID, "Id"))
@@ -28,9 +31,13 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .WithMessage(string.Format(Constants.ErrorMessages.NOT_FOUND, "User"))
                 .Must(headTeacherId => headTeacherId == null || _userRepository.CheckUserIsStudent(headTeacherId) == false)
                 .WithMessage(string.Format(Constants.ErrorMessages.INVALID_HEAD, "HeadTeacher"));
+
             RuleFor(x => x.Name)
                 .Matches(Constants.Regexes.CLASSNAME)
-                .WithMessage(string.Format(Constants.ErrorMessages.TEXT_NUMBER, "Name"));
+                .WithMessage(string.Format(Constants.ErrorMessages.INVALID_FIELD, "Name"))
+                .Must(name => _classRepository.CheckClassNameExists(name) == false)
+                .WithMessage(string.Format(Constants.ErrorMessages.ALREADY_EXISTS, "Name"));
+
             RuleFor(x => x.AcademicYear)
                 .Must(academicYear => academicYear >= (int)Constants.Enums.MIN_ACADEMIC_YEAR)
                 .WithMessage(Constants.ErrorMessages.INVALID_ACADEMIC_YEAR);

@@ -61,9 +61,11 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         {
             dto.ValidateInput();
 
-            int totalItems = await _context.CommunityActivityTypes.CountAsync(a => a.IsDeleted == false);
+            int totalItems = await _context.CommunityActivityTypes
+                .Where(a => a.Name!.ToLower().Contains(dto.Filter!) && a.IsDeleted == false)
+                .CountAsync();
             int totalPages = (int)Math.Ceiling((double)totalItems / dto.ItemPerPage);
-            dto.Page = Math.Min(dto.Page, totalPages);
+            dto.Page = totalPages > 0 ? Math.Min(dto.Page, totalPages) : 1;
             int skipCount = (dto.Page - 1) * dto.ItemPerPage;
             bool isNextPage = skipCount + dto.ItemPerPage < totalItems;
             bool isPreviousPage = dto.Page > 1;
@@ -103,6 +105,18 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             communityActivityType.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return communityActivityType;
+        }
+
+        public bool CheckCommunityActivityTypeNameExists(string name)
+        {
+            return _context.CommunityActivityTypes.Any(cat => name.ToLower().Equals(cat.Name!.ToLower()) && cat.IsDeleted == false);
+        }
+
+        public bool CheckCommunityActivityTypeNameExists(string id, string name)
+        {
+            return _context.CommunityActivityTypes.Any(cat => name.ToLower().Equals(cat.Name!.ToLower()) 
+                                                                && id.Equals(cat.Id) == false
+                                                                && cat.IsDeleted == false);
         }
     }
 }

@@ -63,9 +63,11 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         {
             dto.ValidateInput();
 
-            int totalItems = await _context.Announcements.CountAsync(a => a.IsDeleted == false);
+            int totalItems = await _context.Announcements
+                .Where(a => (string.Concat(a.Title, a.Content).ToLower().Contains(dto.Filter!)) && a.IsDeleted == false)
+                .CountAsync();
             int totalPages = (int)Math.Ceiling((double)totalItems / dto.ItemPerPage);
-            dto.Page = Math.Min(dto.Page, totalPages);
+            dto.Page = totalPages > 0 ? Math.Min(dto.Page, totalPages) : 1;
             int skipCount = (dto.Page - 1) * dto.ItemPerPage;
             bool isNextPage = skipCount + dto.ItemPerPage < totalItems;
             bool isPreviousPage = dto.Page > 1;

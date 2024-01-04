@@ -44,6 +44,7 @@
             public const string INVALID_CLASSPRESIDENT = "Class president must belong to class.";
             public const string INVALID_YEAR = "{0} must be a valid year and earlier or equal than the current year.";
             public const string INVALID_ACADEMIC_YEAR = "Academic year must be higher than or equal to 2017.";
+            public const string ALREADY_EXISTS = "{0} is already exists.";
         }
 
         public static class Regexes

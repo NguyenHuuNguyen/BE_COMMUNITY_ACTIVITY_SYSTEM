@@ -13,5 +13,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
         Task<bool> DeleteCommunityActivityTypeAsync(string id);
         Task<bool> CheckCommunityActivityTypeExistsAsync(string id);
         bool CheckCommunityActivityTypeExists(string id);
+        bool CheckCommunityActivityTypeNameExists(string name);
+        bool CheckCommunityActivityTypeNameExists(string id, string name);
     }
 }

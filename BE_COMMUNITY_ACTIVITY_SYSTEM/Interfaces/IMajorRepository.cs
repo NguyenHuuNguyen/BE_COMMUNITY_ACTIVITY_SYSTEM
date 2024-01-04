@@ -14,5 +14,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
         Task<bool> CheckMajorExistsAsync(string id);
         Task<bool> CheckMajorHeadExistsAsync(string majorHeadId,string id);
         bool CheckMajorExist(string id);
+        bool CheckMajorNameExists(string majorName);
+        bool CheckMajorNameExists(string id, string majorName);
     }
 }

@@ -43,10 +43,12 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .Must(classPresidentId => classPresidentId == null || _userRepository.CheckUserIsStudent(classPresidentId))
                 .WithMessage(string.Format(Constants.ErrorMessages.INVALID_STUDENT, "ClassPresident"))
                 .Must((dto, classPresidentId) => classPresidentId == null || _userRepository.CheckStudentBelongToClass(classPresidentId, dto.Id!))
-                .WithMessage(string.Format(Constants.ErrorMessages.INVALID_CLASSPRESIDENT, "ClassPresident"));
+                .WithMessage(Constants.ErrorMessages.INVALID_CLASSPRESIDENT);
             RuleFor(x => x.Name)
                 .Matches(Constants.Regexes.CLASSNAME)
-                .WithMessage(string.Format(Constants.ErrorMessages.TEXT_NUMBER, "Name"));
+                .WithMessage(string.Format(Constants.ErrorMessages.INVALID_FIELD, "Name"))
+                .Must((dto, name) => dto.Id == null || _classRepository.CheckClassNameExists(dto.Id, name) == false)
+                .WithMessage(string.Format(Constants.ErrorMessages.ALREADY_EXISTS, "Name"));
             RuleFor(x => x.AcademicYear)
                 .Must(academicYear => academicYear >= (int)Constants.Enums.MIN_ACADEMIC_YEAR)
                 .WithMessage(Constants.ErrorMessages.INVALID_ACADEMIC_YEAR);

@@ -21,6 +21,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .WithMessage(string.Format(Constants.ErrorMessages.INVALID_GUID, "Id"))
                 .Must(majorId => majorId == null || _majorRepository.CheckMajorExist(majorId))
                 .WithMessage(string.Format(Constants.ErrorMessages.NOT_FOUND, "Major"));
+
             RuleFor(x => x.MajorHeadId)
                 .Must(majorHeadId => majorHeadId == null || _commonRepository.IsGuid(majorHeadId))
                 .WithMessage(string.Format(Constants.ErrorMessages.INVALID_GUID, "Id"))
@@ -28,6 +29,10 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .WithMessage(string.Format(Constants.ErrorMessages.NOT_FOUND, "User"))
                 .Must(majorHeadId => majorHeadId == null || _userRepository.CheckUserIsStudent(majorHeadId) == false)
                 .WithMessage(string.Format(Constants.ErrorMessages.INVALID_HEAD, "MajorHead"));
+
+            RuleFor(x => x.Name)
+                .Must((dto, name) => name == null || dto.Id == null || _majorRepository.CheckMajorNameExists(dto.Id, name) == false)
+                .WithMessage(string.Format(Constants.ErrorMessages.ALREADY_EXISTS, "Name"));
         }
     }
 }

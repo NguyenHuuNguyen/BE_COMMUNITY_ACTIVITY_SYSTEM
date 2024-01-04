@@ -27,7 +27,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
                 .Include(c => c.Major)
                 .Include(c => c.HeadTeacher)
                 .Include(c => c.ClassPresident)
-                .FirstOrDefaultAsync(a => dto.Id!.Equals(a.Id) && a.IsDeleted == false);
+                .FirstOrDefaultAsync(a => dto.ClassId!.Equals(a.Id) && a.IsDeleted == false);
 
             if (classes == null)
             {
@@ -59,6 +59,18 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         public async Task<bool> CheckClassExistsAsync(string classId)
         {
             return await _context.Classes.AnyAsync(c => classId.Equals(c.Id) && c.IsDeleted == false);
+        }
+
+        public bool CheckClassNameExists(string className)
+        {
+            return _context.Classes.Any(c => c.Name!.ToLower().Equals(className.ToLower()) && c.IsDeleted == false);
+        }
+
+        public bool CheckClassNameExists(string id, string className)
+        {
+            return _context.Classes.Any(c => c.Name!.ToLower().Equals(className.ToLower()) 
+                                            && c.Id!.Equals(id) == false 
+                                            && c.IsDeleted == false);
         }
 
         public async Task<bool> CheckHeadTeacherOfClass(string headTeacherId, string classId)
@@ -137,9 +149,12 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         public async Task<BasePaginationDto<ClassGetDto>> GetClassPaginationAsync(ClassPaginationRequestDto dto)
         {
             dto.ValidateInput();
-            int totalItems = await _context.Classes.CountAsync(a => a.IsDeleted == false);
+            int totalItems = await _context.Classes
+                .CountAsync(c => (dto.AcademyYear <= 0 || c.AcademicYear == dto.AcademyYear) &&
+                                 c.Major!.Id!.Contains(dto.MajorId!) &&
+                                 c.IsDeleted == false);
             int totalPages = (int)Math.Ceiling((double)totalItems / dto.ItemPerPage);
-            dto.Page = Math.Min(dto.Page, totalPages);
+            dto.Page = totalPages > 0 ? Math.Min(dto.Page, totalPages) : 1;
             int skipCount = (dto.Page - 1) * dto.ItemPerPage;
             bool isNextPage = skipCount + dto.ItemPerPage < totalItems;
             bool isPreviousPage = dto.Page > 1;
@@ -148,9 +163,9 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
                 .Include(c => c.Major)
                 .Include(c => c.HeadTeacher)
                 .Include(c => c.ClassPresident)
-                .Where(c => (dto.AcademyYear == null || dto.AcademyYear.Equals(c.AcademicYear)) &&
-                c.Major!.Name!.ToLower().Contains(dto.MajorName!) &&
-                c.IsDeleted == false)
+                .Where(c => (dto.AcademyYear <= 0 || c.AcademicYear == dto.AcademyYear) &&
+                            c.Major!.Id!.Contains(dto.MajorId!) &&
+                            c.IsDeleted == false)
                 .OrderByDescending(a => a.CreatedAt)
                 .Skip(skipCount)
                 .Take(dto.ItemPerPage)

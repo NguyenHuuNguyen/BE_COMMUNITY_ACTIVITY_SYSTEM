@@ -99,9 +99,15 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         {
             dto.ValidateInput();
 
-            int totalItems = await _context.Users.CountAsync(a => a.IsDeleted == false && a.TeacherId != null && a.StudentId == null);
+            int totalItems = await _context.Users
+                .Where(u => u.IsDeleted == false 
+                    && u.TeacherId != null 
+                    && u.StudentId == null 
+                    && (string.Concat(u.TeacherId, u.FirstName, " ", u.LastName).ToLower().Contains(dto.Filter!)))
+                .CountAsync();
+
             int totalPages = (int)Math.Ceiling((double)totalItems / dto.ItemPerPage);
-            dto.Page = Math.Min(dto.Page, totalPages);
+            dto.Page = totalPages > 0 ? Math.Min(dto.Page, totalPages) : 1;
             int skipCount = (dto.Page - 1) * dto.ItemPerPage;
             bool isNextPage = skipCount + dto.ItemPerPage < totalItems;
             bool isPreviousPage = dto.Page > 1;
@@ -263,5 +269,16 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return nextTeacherId;
         }
 
+        public bool CheckIdentificationCardIdExists(string identificationCardId)
+        {
+            return _context.Users.Any(u => identificationCardId.Equals(u.IdentificationCardId) && u.IsDeleted == false);
+        }
+
+        public bool CheckIdentificationCardIdExists(string id, string identificationCardId)
+        {
+            return _context.Users.Any(u => identificationCardId.Equals(u.IdentificationCardId)
+                                            && id.Equals(u.Id) == false
+                                            && u.IsDeleted == false);
+        }
     }
 }

@@ -51,6 +51,12 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .Matches(Constants.Regexes.TEXT_ONLY)
                 .WithMessage(string.Format(Constants.ErrorMessages.TEXT_ONLY, "Nationality"));
 
+            RuleFor(x => x.IdentificationCardId)
+                .Must((dto, identificationCardId) => identificationCardId == null
+                                                     || dto.Id == null
+                                                     || _userRepository.CheckIdentificationCardIdExists(dto.Id, identificationCardId) == false)
+                .WithMessage(string.Format(Constants.ErrorMessages.ALREADY_EXISTS, "IdentificationCardId"));
+
             RuleFor(x => x.IdentificationCardIssueDate)
                 .Must(IsValidDate)
                 .WithMessage(string.Format(Constants.ErrorMessages.DATE_MUST_BE_EARLIER_THAN_CURRENT_TIME, "Identification Card Issue Date"));

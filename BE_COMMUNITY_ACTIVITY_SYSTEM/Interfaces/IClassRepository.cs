@@ -17,5 +17,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
         Task<bool> CheckClassExistsAsync(string classId);
         Task<bool> CheckHeadTeacherOfClass(string headTeacherId, string classId);
         bool CheckClassExists(string classId);
+        bool CheckClassNameExists(string className);
+        bool CheckClassNameExists(string id, string className);
     }
 }

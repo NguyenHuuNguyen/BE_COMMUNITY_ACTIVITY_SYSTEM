@@ -20,6 +20,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
         Task<string?> UploadAvatarAsync(string userId, IFormFile image);
         bool CheckStudentBelongToClass(string studentId, string classId);
         bool CheckUserExists(string userId);
+        bool CheckIdentificationCardIdExists(string identificationCardId);
+        bool CheckIdentificationCardIdExists(string id, string identificationCardId);
         bool CheckUserIsStudent(string userId);
     }
 }

@@ -8,11 +8,13 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
     {
         private readonly ICommonRepository _commonRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IMajorRepository _majorRepository;
 
-        public MajorCreateDtoValidator(ICommonRepository commonRepository, IUserRepository userRepository)
+        public MajorCreateDtoValidator(ICommonRepository commonRepository, IUserRepository userRepository, IMajorRepository majorRepository)
         {
             _commonRepository = commonRepository;
             _userRepository = userRepository;
+            _majorRepository = majorRepository;
 
             RuleFor(x => x.MajorHeadId)
                 .Must(majorHeadId => majorHeadId == null || _commonRepository.IsGuid(majorHeadId))
@@ -21,6 +23,10 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
                 .WithMessage(string.Format(Constants.ErrorMessages.NOT_FOUND, "User"))
                 .Must(majorHeadId => majorHeadId == null || _userRepository.CheckUserIsStudent(majorHeadId) == false)
                 .WithMessage(string.Format(Constants.ErrorMessages.INVALID_HEAD, "MajorHead"));
+
+            RuleFor(x => x.Name)
+                .Must(name => name == null || _majorRepository.CheckMajorNameExists(name) == false)
+                .WithMessage(string.Format(Constants.ErrorMessages.ALREADY_EXISTS, "Name"));
         }
     }
 }

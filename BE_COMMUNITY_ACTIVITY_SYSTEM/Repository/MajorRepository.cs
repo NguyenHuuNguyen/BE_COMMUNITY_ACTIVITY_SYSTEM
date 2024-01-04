@@ -37,6 +37,18 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return await _context.Majors.AnyAsync(a => majorHeadId.Equals(a.MajorHeadId) && a.IsDeleted == false && a.Id != id);
         }
 
+        public bool CheckMajorNameExists(string majorName)
+        {
+            return _context.Majors.Any(m => majorName.ToLower().Equals(m.Name!.ToLower()) && m.IsDeleted == false);
+        }
+
+        public bool CheckMajorNameExists(string id, string majorName)
+        {
+            return _context.Majors.Any(m => majorName.ToLower().Equals(m.Name!.ToLower())
+                                            && id.Equals(m.Id) == false
+                                            && m.IsDeleted == false);
+        }
+
         public async Task<Major> CreateMajorAsync(MajorCreateDto dto)
         {
             var major = _mapper.Map<Major>(dto);
@@ -75,9 +87,11 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         public async Task<BasePaginationDto<MajorGetDto>> GetMajorsPaginationAsync(BasePaginationRequestDto dto)
         {
             dto.ValidateInput();
-            int totalItems = await _context.Majors.CountAsync(a => a.IsDeleted == false);
+            int totalItems = await _context.Majors
+                .Where(a => a.Name!.ToLower().Contains(dto.Filter!) && a.IsDeleted == false)
+                .CountAsync();
             int totalPages = (int)Math.Ceiling((double)totalItems / dto.ItemPerPage);
-            dto.Page = Math.Min(dto.Page, totalPages);
+            dto.Page = totalPages > 0 ? Math.Min(dto.Page, totalPages) : 1;
             int skipCount = (dto.Page - 1) * dto.ItemPerPage;
             bool isNextPage = skipCount + dto.ItemPerPage < totalItems;
             bool isPreviousPage = dto.Page > 1;

@@ -8,11 +8,13 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
     {
         private readonly IClassRepository _classRepository;
         private readonly ICommonRepository _commonRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UserCreateDtoValidator(IClassRepository classRepository, ICommonRepository commonRepository)
+        public UserCreateDtoValidator(IClassRepository classRepository, ICommonRepository commonRepository, IUserRepository userRepository)
         {
             _classRepository = classRepository;
             _commonRepository = commonRepository;
+            _userRepository = userRepository;
 
             RuleFor(x => x.ClassId)
                 .Must(classId => classId == null || _commonRepository.IsGuid(classId))
@@ -33,6 +35,10 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.FluentValidation
             RuleFor(x => x.DateOfBirth)
                 .Must( dob => dob < DateTime.Now)
                 .WithMessage(string.Format(Constants.ErrorMessages.DATE_MUST_BE_EARLIER_THAN_CURRENT_TIME, "Date of Birth"));
+
+            RuleFor(x => x.IdentificationCardId)
+                .Must(identificationCardId => identificationCardId == null || _userRepository.CheckIdentificationCardIdExists(identificationCardId) == false)
+                .WithMessage(string.Format(Constants.ErrorMessages.ALREADY_EXISTS, "IdentificationCardId"));
         }
     }
 }
