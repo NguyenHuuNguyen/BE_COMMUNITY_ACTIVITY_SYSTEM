@@ -15,7 +15,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
         Task<Class> AssignClassPresidentAsync(ClassAssignClassPresidentDto data);
         Task<bool> DeleteClassAsync(string classId);
         Task<bool> CheckClassExistsAsync(string classId);
-        Task<bool> CheckHeadTeacherOfClass(string headTeacherId, string classId);
+        Task<bool> CheckIsHeadTeacherOfClass(string headTeacherId, string classId);
         bool CheckClassExists(string classId);
         bool CheckClassNameExists(string className);
         bool CheckClassNameExists(string id, string className);

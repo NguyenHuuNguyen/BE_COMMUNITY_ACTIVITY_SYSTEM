@@ -55,8 +55,10 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(200, Type = typeof(string))]
+        [ProducesResponseType(200, Type = typeof(LoginSuccessDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
         {
             var tokenUserId = HttpContext.User.FindFirst("UserId")!.Value;
@@ -67,8 +69,13 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
 
             await _authRepository.ChangePasswordAsync(dto.UserId!, dto.Password!);
             var user = await _userRepository.GetUserByIdAsync(dto.UserId!);
-            var token = _authRepository.CreateToken(user);
-            return Ok(token);
+            var token = await _authRepository.CreateToken(user);
+            var returnData = new LoginSuccessDto()
+            {
+                IsSuccess = true,
+                Token = token,
+            };
+            return Ok(returnData);
         }
     }
 }

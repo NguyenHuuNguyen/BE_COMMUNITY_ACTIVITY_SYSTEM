@@ -12,7 +12,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
         Task<Major> UpdateMajorAsync(MajorUpdateDto data);
         Task<bool> DeleteMajorAsync(string id);
         Task<bool> CheckMajorExistsAsync(string id);
-        Task<bool> CheckMajorHeadExistsAsync(string majorHeadId,string id);
+        Task<bool> CheckIsMajorHeadOfOthersMajorAsync(string majorHeadId,string currentMajorId);
         bool CheckMajorExist(string id);
         bool CheckMajorNameExists(string majorName);
         bool CheckMajorNameExists(string id, string majorName);

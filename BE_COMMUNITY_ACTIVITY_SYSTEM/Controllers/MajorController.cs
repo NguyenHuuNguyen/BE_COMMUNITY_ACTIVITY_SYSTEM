@@ -25,7 +25,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             _commonRepository = commonRepository;
         }
 
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<MajorGetDto>))]
         public async Task<IActionResult> GetMajorsList()
         {
@@ -33,7 +33,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             return Ok(majors);
         }
 
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         [ProducesResponseType(200, Type = typeof(BasePaginationDto<MajorGetDto>))]
         public async Task<IActionResult> GetMajorsPaginationList([FromQuery] BasePaginationRequestDto dto)
         {

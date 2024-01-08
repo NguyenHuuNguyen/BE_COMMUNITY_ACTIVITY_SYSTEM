@@ -52,7 +52,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<ICollection<CommunityActivityType>> GetCommunityActivityTypeAsync()
+        public async Task<ICollection<CommunityActivityType>> GetCommunityActivityTypesAsync()
         {
             return await _context.CommunityActivityTypes.Where(a => a.IsDeleted == false).ToListAsync();
         }
@@ -117,6 +117,13 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return _context.CommunityActivityTypes.Any(cat => name.ToLower().Equals(cat.Name!.ToLower()) 
                                                                 && id.Equals(cat.Id) == false
                                                                 && cat.IsDeleted == false);
+        }
+
+        public CommunityActivityType GetCommunityActivityTypeById(string id)
+        {
+            #pragma warning disable CS8603 // Possible null reference return.
+            return _context.CommunityActivityTypes.FirstOrDefault(cat => id.Equals(cat.Id) && cat.IsDeleted == false);
+            #pragma warning restore CS8603 // Possible null reference return.
         }
     }
 }

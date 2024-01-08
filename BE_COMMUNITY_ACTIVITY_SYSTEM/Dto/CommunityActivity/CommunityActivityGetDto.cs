@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Models
+namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.CommunityActivity
 {
-    public class CommunityActivity
+    public class CommunityActivityGetDto
     {
-        [Key]
         public String? Id { get; set; }
-        // FK1
         public String? UserId { get; set; }
-        // FK2
         public String? ActivityTypeId { get; set; }
+        public String? ActivityTypeName { get; set; } // map thì để ý cái này
         public String? Name { get; set; }
         public int Year { get; set; }
         public int SelfEvaluationScore { get; set; }
@@ -21,12 +19,5 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Models
         public String? HeadTeacherNote { get; set; }
         public String? MajorHeadNote { get; set; }
         public String? AdminNote { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public String? CreatedBy { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public String? UpdatedBy { get; set; }
-        public Boolean IsDeleted { get; set; }
-        public User? User { get; set; }
-        public CommunityActivityType? CommunityActivityType { get; set; }
     }
 }

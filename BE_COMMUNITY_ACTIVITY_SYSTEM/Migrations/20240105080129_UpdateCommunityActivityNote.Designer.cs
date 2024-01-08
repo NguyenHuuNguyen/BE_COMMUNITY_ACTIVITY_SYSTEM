@@ -4,6 +4,7 @@ using BE_COMMUNITY_ACTIVITY_SYSTEM.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240105080129_UpdateCommunityActivityNote")]
+    partial class UpdateCommunityActivityNote
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,7 +106,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ActivityTypeId")
+                    b.Property<string>("ActivityTpeId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AdminNote")
@@ -160,7 +162,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ActivityTypeId");
+                    b.HasIndex("ActivityTpeId");
 
                     b.HasIndex("UserId");
 
@@ -459,7 +461,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Migrations
                 {
                     b.HasOne("BE_COMMUNITY_ACTIVITY_SYSTEM.Models.CommunityActivityType", "CommunityActivityType")
                         .WithMany("CommunityActivities")
-                        .HasForeignKey("ActivityTypeId");
+                        .HasForeignKey("ActivityTpeId");
 
                     b.HasOne("BE_COMMUNITY_ACTIVITY_SYSTEM.Models.User", "User")
                         .WithMany("CommunityActivities")

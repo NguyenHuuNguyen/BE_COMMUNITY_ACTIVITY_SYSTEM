@@ -29,7 +29,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ClassGetDto>))]
         public async Task<IActionResult> GetClassesList()
         {
@@ -37,7 +37,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
             return Ok(classes);
         }
 
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         [ProducesResponseType(200, Type = typeof(BasePaginationDto<ClassGetDto>))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         public async Task<IActionResult> GetClassesPaginationList([FromQuery] ClassPaginationRequestDto dto)
@@ -107,7 +107,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         public async Task<IActionResult> UpdateClassPresident([FromBody] ClassAssignClassPresidentDto dto)
         {
             var tokenUserId = HttpContext.User.FindFirst("UserId")!.Value;
-            if (!await _classRepository.CheckHeadTeacherOfClass(tokenUserId, dto.ClassId!))
+            if (!await _classRepository.CheckIsHeadTeacherOfClass(tokenUserId, dto.ClassId!))
             {
                 return Forbid();
             }

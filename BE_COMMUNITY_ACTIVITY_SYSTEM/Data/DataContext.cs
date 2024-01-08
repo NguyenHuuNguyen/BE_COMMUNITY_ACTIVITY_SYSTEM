@@ -47,7 +47,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Data
             modelBuilder.Entity<CommunityActivity>()
                 .HasOne(ca => ca.CommunityActivityType)
                 .WithMany(cat => cat.CommunityActivities)
-                .HasForeignKey(ca => ca.ActivityTpeId);
+                .HasForeignKey(ca => ca.ActivityTypeId);
 
             modelBuilder.Entity<Major>()
                 .HasOne(m => m.MajorHead)

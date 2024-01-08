@@ -6,7 +6,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
 {
     public interface ICommunityActivityTypeRepository
     {
-        Task<ICollection<CommunityActivityType>> GetCommunityActivityTypeAsync();
+        Task<ICollection<CommunityActivityType>> GetCommunityActivityTypesAsync();
+        CommunityActivityType GetCommunityActivityTypeById(string id);
         Task<BasePaginationDto<CommunityActivityTypeGetDto>> GetCommunityActivityTypesPaginationAsync(BasePaginationRequestDto dto);
         Task<CommunityActivityType> CreateCommunityActivityTypeAsync(CommunityActivityTypeCreateDto dto);
         Task<CommunityActivityType> UpdateCommunityActivityTypeAsync(CommunityActivityTypeUpdateDto dto);

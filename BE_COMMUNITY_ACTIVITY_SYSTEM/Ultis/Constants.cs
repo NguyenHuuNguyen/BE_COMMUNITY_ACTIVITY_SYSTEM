@@ -45,6 +45,7 @@
             public const string INVALID_YEAR = "{0} must be a valid year and earlier or equal than the current year.";
             public const string INVALID_ACADEMIC_YEAR = "Academic year must be higher than or equal to 2017.";
             public const string ALREADY_EXISTS = "{0} is already exists.";
+            public const string INVALID_ACTIVITY_SCORE = "Invalid activity score, please input from {0} to {1}";
         }
 
         public static class Regexes

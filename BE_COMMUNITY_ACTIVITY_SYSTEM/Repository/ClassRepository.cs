@@ -73,7 +73,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
                                             && c.IsDeleted == false);
         }
 
-        public async Task<bool> CheckHeadTeacherOfClass(string headTeacherId, string classId)
+        public async Task<bool> CheckIsHeadTeacherOfClass(string headTeacherId, string classId)
         {
             var isAdmin = await _authRepository.CheckUserHasRoleAsync(headTeacherId, Constants.Roles.ADMIN);
 
@@ -108,8 +108,18 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             {
                 return false;
             }
+
             classes.IsDeleted = true;
+
+            var usersToDelete = await _context.Users.Where(u => id.Equals(u.ClassId) && u.IsDeleted == false).ToListAsync();
+
+            foreach (var user in usersToDelete)
+            {
+                user.IsDeleted = true;
+            }
+
             await _authRepository.RevokeRoleAsync(classes.ClassPresidentId!, Constants.Roles.LOP_TRUONG);
+
             return await _context.SaveChangesAsync() > 0;
 
         }

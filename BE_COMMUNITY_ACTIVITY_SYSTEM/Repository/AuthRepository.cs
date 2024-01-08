@@ -39,10 +39,9 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             {
                 new Claim("UserId", user.Id!),
                 new Claim("FirstName", user.FirstName!),
-                new Claim("IsStudent", isStudent.ToString())
+                new Claim("IsStudent", isStudent.ToString()),
+                new Claim(ClaimTypes.Role, "DEFAULT")
             };
-
-            claims.Add(new Claim(ClaimTypes.Role, "DEFAULT"));
 
             foreach (var role in roles)
             {
@@ -113,7 +112,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
 
         public async Task<bool> CheckLogin(string account, string password)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => account.Equals(x.StudentId) || account.Equals(x.TeacherId));
+            var user = await _context.Users.FirstOrDefaultAsync(x => (account.Equals(x.StudentId) || account.Equals(x.TeacherId)) && x.IsDeleted == false);
 
             if (user == null || user.PasswordHash == null || user.PasswordSalt == null)
             {
@@ -142,11 +141,11 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
 
         public async Task<bool> CheckAccountLockedAsync(string account)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => account.Equals(x.StudentId) || account.Equals(x.TeacherId));
+            var user = await _context.Users.FirstOrDefaultAsync(x => (account.Equals(x.StudentId) || account.Equals(x.TeacherId)) && x.IsDeleted == false);
 
             if (user == null || user.PasswordHash == null || user.PasswordSalt == null)
             {
-                return false;
+                return true;
             }
 
             return user.Status == (int)Constants.Enums.ACCOUNT_LOCKED;

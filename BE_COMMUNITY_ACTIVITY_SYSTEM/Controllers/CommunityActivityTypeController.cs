@@ -29,7 +29,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<CommunityActivityTypeGetDto>))]
         public async Task<IActionResult> GetCommunityActivityTypesList()
         {
-            var communityActivityType = _mapper.Map<List<CommunityActivityTypeGetDto>>(await _communityActivityTypeRepository.GetCommunityActivityTypeAsync());
+            var communityActivityType = _mapper.Map<List<CommunityActivityTypeGetDto>>(await _communityActivityTypeRepository.GetCommunityActivityTypesAsync());
             return Ok(communityActivityType);
         }
 

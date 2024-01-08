@@ -14,12 +14,14 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly IAuthRepository _authRepository;
+        private readonly IClassRepository _classRepository;
 
-        public MajorRepository(DataContext context, IMapper mapper, IAuthRepository authRepository)
+        public MajorRepository(DataContext context, IMapper mapper, IAuthRepository authRepository, IClassRepository classRepository)
         {
             _context = context;
             _mapper = mapper;
             _authRepository = authRepository;
+            _classRepository = classRepository;
         }
 
         public bool CheckMajorExist(string id)
@@ -32,9 +34,9 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return await _context.Majors.AnyAsync(a => id.Equals(a.Id) && a.IsDeleted == false);
         }
 
-        public async Task<bool> CheckMajorHeadExistsAsync(string majorHeadId, string id)
+        public async Task<bool> CheckIsMajorHeadOfOthersMajorAsync(string majorHeadId, string currentMajorId)
         {
-            return await _context.Majors.AnyAsync(a => majorHeadId.Equals(a.MajorHeadId) && a.IsDeleted == false && a.Id != id);
+            return await _context.Majors.AnyAsync(a => majorHeadId.Equals(a.MajorHeadId) && a.IsDeleted == false && a.Id != currentMajorId);
         }
 
         public bool CheckMajorNameExists(string majorName)
@@ -69,13 +71,21 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             {
                 return false;
             }
+
             major.IsDeleted = true;
 
-            var check = await this.CheckMajorHeadExistsAsync(major.MajorHeadId!, id);
+            var check = await this.CheckIsMajorHeadOfOthersMajorAsync(major.MajorHeadId!, id);
             if (check == false)
             {
                 await _authRepository.RevokeRoleAsync(major.MajorHeadId!, Constants.Roles.TRUONG_KHOA);
             }
+
+            var classesToDelete = await _context.Classes.Where(c => id.Equals(c.MajorId) && c.IsDeleted == false).ToListAsync();
+            foreach (var classToDelete in classesToDelete)
+            {
+                await _classRepository.DeleteClassAsync(classToDelete.Id!);
+            }
+
             return await _context.SaveChangesAsync() > 0;
         }
 
@@ -131,7 +141,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
 
             if (!major.MajorHeadId!.Equals(dto.MajorHeadId))
             {
-                var check = await this.CheckMajorHeadExistsAsync(major.MajorHeadId!, major.Id!);
+                var check = await this.CheckIsMajorHeadOfOthersMajorAsync(major.MajorHeadId!, major.Id!);
                 if (check == false)
                 {
                     await _authRepository.RevokeRoleAsync(major.MajorHeadId!, Constants.Roles.TRUONG_KHOA);

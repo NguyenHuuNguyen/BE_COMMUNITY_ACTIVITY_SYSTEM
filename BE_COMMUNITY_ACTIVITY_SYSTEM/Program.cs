@@ -23,6 +23,7 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IClassRepository, ClassRepository>();
 builder.Services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
 builder.Services.AddScoped<ICommunityActivityTypeRepository, CommunityActivityTypeRepository>();
+builder.Services.AddScoped<ICommunityActivityRepository, CommunityActivityRepository>();
 builder.Services.AddScoped<IMajorRepository, MajorRepository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

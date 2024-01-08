@@ -34,6 +34,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(UserGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetUserByUserId([FromQuery] string userId)
@@ -65,6 +66,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
 
         [HttpGet, Authorize(Roles = ADMIN)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<UserGetDto>))]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> GetUsersList()
         {
             var users = _mapper.Map<List<UserGetDto>>(await _userRepository.GetUsersAsync());
@@ -73,6 +76,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
 
         [HttpGet, Authorize(Roles = ADMIN)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<UserGetDto>))]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> GetTeachersList()
         {
             var users = _mapper.Map<List<UserGetDto>>(await _userRepository.GetTeachersAsync());
@@ -90,6 +95,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<UserGetDto>))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetStudentsListByClassId([FromQuery] string classId)
         {
@@ -115,6 +121,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpDelete, Authorize(Roles = ADMIN)]
         [ProducesResponseType(204)]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteUser([FromQuery] string userId)
         {
@@ -140,6 +148,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpPost, Authorize(Roles = ADMIN)]
         [ProducesResponseType(200, Type = typeof(UserGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> CreateUser([FromBody] UserCreateDto userCreate)
         {
             var user = _mapper.Map<UserGetDto>(await _userRepository.CreateUserAsync(userCreate));
@@ -149,6 +159,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpPut]
         [ProducesResponseType(200, Type = typeof(UserGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> UpdateUser([FromForm] UserUpdateDto userUpdate)
         {
             var tokenUserId = HttpContext.User.FindFirst("UserId")!.Value;
@@ -170,6 +182,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpPatch, Authorize(Roles = ADMIN)]
         [ProducesResponseType(200, Type = typeof(UserGetDto))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> UpdateUserStatus([FromBody] UserStatusUpdateDto updateData)
         {
             var user = _mapper.Map<UserGetDto>(await _userRepository.UpdateUserStatusAsync(updateData.UserId!, updateData.Status));
@@ -205,6 +219,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(string))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         public async Task<IActionResult> UploadAvatar([FromForm] UserUploadAvatarDto dto)
         {
