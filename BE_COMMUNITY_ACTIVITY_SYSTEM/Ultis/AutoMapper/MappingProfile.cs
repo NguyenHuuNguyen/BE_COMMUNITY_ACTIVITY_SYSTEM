@@ -4,6 +4,7 @@ using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Class;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.CommunityActivity;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.CommunityActivityType;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Major;
+using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.NewFolder;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Models;
 
@@ -14,6 +15,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.AutoMapper
         public MappingProfile()
         {
             CreateMap<User, UserGetDto>();
+            CreateMap<User, UserGetWithCommunityActivityScoreDto>();
             CreateMap<UserCreateDto, User>();
             CreateMap<UserUpdateDto, User>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
@@ -52,6 +54,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.AutoMapper
             CreateMap<CommunityActivityCreateDto, CommunityActivity>();
             CreateMap<CommunityActivityUpdateDto, CommunityActivity>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<Setting, SettingGetDto>();
         }
     }
 }

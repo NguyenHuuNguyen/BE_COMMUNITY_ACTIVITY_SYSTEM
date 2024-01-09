@@ -4,8 +4,10 @@ using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.Announcement;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Dto.User;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Repository;
+using BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata;
 using static BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.Constants;
 using static BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.Constants.Roles;
 
@@ -93,11 +95,11 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<UserGetDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<UserGetWithCommunityActivityScoreDto>))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetStudentsListByClassId([FromQuery] string classId)
+        public async Task<IActionResult> GetStudentsListByClassId([FromQuery] string classId, [FromQuery] int? year = null)
         {
             if (_commonRepository.IsGuid(classId) == false)
             {
@@ -114,7 +116,10 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
                 return NotFound();
             }
 
-            var users = _mapper.Map<List<UserGetDto>>(await _userRepository.GetStudentsByClassIdAsync(classId));
+            int currentYear = DateTime.Now.Year;
+            int queryYear = year ?? currentYear;
+
+            var users = await _userRepository.GetStudentsByClassIdAsync(classId, queryYear);
             return Ok(users);
         }
 

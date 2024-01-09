@@ -154,5 +154,10 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             await _context.SaveChangesAsync();
             return major;
         }
+
+        public async Task<ICollection<Major>> GetMajorsByMajorHeadIdAsync(string majorHeadId)
+        {
+            return await _context.Majors.Include(m => m.MajorHead).Where(m => majorHeadId.Equals(m.MajorHeadId) && m.IsDeleted == false).ToListAsync();
+        }
     }
 }

@@ -6,6 +6,7 @@ using BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Models;
 using BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis;
 using Microsoft.EntityFrameworkCore;
+using static BE_COMMUNITY_ACTIVITY_SYSTEM.Ultis.Constants.CommunityActivityStatus;
 
 namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
 {
@@ -15,13 +16,16 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
         private readonly IMapper _mapper;
         private readonly ICommonRepository _commonRepository;
         private readonly IAuthRepository _authRepository;
+        private readonly ICommunityActivityRepository _communityActivityRepository;
 
-        public UserRepository(DataContext context, IMapper mapper, ICommonRepository commonRepository, IAuthRepository authRepository)
+        public UserRepository(DataContext context, IMapper mapper, ICommonRepository commonRepository
+            , IAuthRepository authRepository, ICommunityActivityRepository communityActivityRepository)
         {
             _context = context;
             _mapper = mapper;
             _commonRepository = commonRepository;
             _authRepository = authRepository;
+            _communityActivityRepository = communityActivityRepository;
         }
 
         public async Task<User> CreateUserAsync(UserCreateDto user)
@@ -138,9 +142,18 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             return paginationResult;
         }
 
-        public async Task<ICollection<User>> GetStudentsByClassIdAsync(string classId)
+        public async Task<ICollection<UserGetWithCommunityActivityScoreDto>> GetStudentsByClassIdAsync(string classId, int year)
         {
-            return await _context.Users.Where(u => !u.IsDeleted && classId.Equals(u.ClassId)).ToListAsync();
+            var users = _mapper.Map<List<UserGetWithCommunityActivityScoreDto>>(await _context.Users.Where(u => !u.IsDeleted && classId.Equals(u.ClassId)).ToListAsync());
+
+            foreach(UserGetWithCommunityActivityScoreDto user in users)
+            {
+                user.SumScoreClassPresidentConfirmed = await _communityActivityRepository.GetUserCommunityActivitySumScore(user.Id!, year, (int)CLASS_PRESIDENT_CONFIRMED);
+                user.SumScoreHeadTeacherConfirmed = await _communityActivityRepository.GetUserCommunityActivitySumScore(user.Id!, year, (int)HEAD_TEACHER_CONFIRMED);
+                user.SumScoreMajorHeadConfirmed = await _communityActivityRepository.GetUserCommunityActivitySumScore(user.Id!, year, (int)MAJOR_HEAD_CONFIRMED);
+            }
+
+            return users;
         }
 
         public async Task<User> UpdateUserStatusAsync(string userId, int status)

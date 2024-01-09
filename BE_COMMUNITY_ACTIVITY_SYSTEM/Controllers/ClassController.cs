@@ -38,6 +38,30 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200, Type = typeof(ClassGetDto))]
+        [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
+        public async Task<IActionResult> GetClassById([FromQuery] string classId)
+        {
+            if (_commonRepository.IsGuid(classId) == false)
+            {
+                var errors = new Dictionary<string, List<string>>
+                {
+                    ["classId"] = new List<string> { string.Format(ErrorMessages.INVALID_GUID, "ClassId") }
+                };
+
+                return _commonRepository.CreateBadRequestResponse(this, errors);
+            }
+
+            if (await _classRepository.CheckClassExistsAsync(classId) == false)
+            {
+                return NotFound();
+            }
+
+            var result = _mapper.Map<ClassGetDto>(await _classRepository.GetClassByIdAsync(classId));
+            return Ok(result);
+        }
+
+    [HttpGet]
         [ProducesResponseType(200, Type = typeof(BasePaginationDto<ClassGetDto>))]
         [ProducesResponseType(400, Type = typeof(BaseErrorDto))]
         public async Task<IActionResult> GetClassesPaginationList([FromQuery] ClassPaginationRequestDto dto)

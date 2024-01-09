@@ -11,7 +11,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
         Task<ICollection<User>> GetUsersAsync();
         Task<ICollection<User>> GetTeachersAsync();
         Task<BasePaginationDto<UserGetDto>> GetTeachersPaginationAsync(BasePaginationRequestDto dto);
-        Task<ICollection<User>> GetStudentsByClassIdAsync(string classId);
+        Task<ICollection<UserGetWithCommunityActivityScoreDto>> GetStudentsByClassIdAsync(string classId, int year);
         Task<User> CreateUserAsync(UserCreateDto user);
         Task<User> UpdateUserAsync(UserUpdateDto user);
         Task<User> UpdateUserStatusAsync(string userId, int status);

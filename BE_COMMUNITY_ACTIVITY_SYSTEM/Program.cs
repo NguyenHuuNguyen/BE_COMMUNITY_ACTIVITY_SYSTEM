@@ -25,6 +25,7 @@ builder.Services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
 builder.Services.AddScoped<ICommunityActivityTypeRepository, CommunityActivityTypeRepository>();
 builder.Services.AddScoped<ICommunityActivityRepository, CommunityActivityRepository>();
 builder.Services.AddScoped<IMajorRepository, MajorRepository>();
+builder.Services.AddScoped<ISettingRepository, SettingRepository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

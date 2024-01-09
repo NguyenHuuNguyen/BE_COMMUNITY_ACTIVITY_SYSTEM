@@ -10,10 +10,25 @@
 
         public enum CommunityActivityStatus
         {
+            REJECCTED = -1,
             NEW = 0,
-            CLASS_PRESIDENT_CONFIRMED = 1,
-            HEAD_TEACHER_CONFIRMED = 2,
-            MAJOR_HEAD_CONFIRMED = 3,
+            STUDENT_CONFIRMED = 1,
+            CLASS_PRESIDENT_CONFIRMED = 2,
+            HEAD_TEACHER_CONFIRMED = 3,
+            MAJOR_HEAD_CONFIRMED = 4,
+        }
+
+        public enum CommunityActivityApprovalPeriod
+        {
+            STUDENT = 1,
+            CLASS_PRESIDENT = 2,
+            HEAD_TEACHER = 3,
+            MAJOR_HEAD = 4,
+        }
+
+        public static class Settings
+        {
+            public const string COMMUNITY_ACTIVITY_APPROVAL_PERIOD = "CommunityActivityApprovalPeriod";
         }
 
         public static class Users
@@ -46,6 +61,7 @@
             public const string INVALID_ACADEMIC_YEAR = "Academic year must be higher than or equal to 2017.";
             public const string ALREADY_EXISTS = "{0} is already exists.";
             public const string INVALID_ACTIVITY_SCORE = "Invalid activity score, please input from {0} to {1}";
+            public const string INVALID_APPROVAL_PERIOD = "Not in approval period.";
         }
 
         public static class Regexes

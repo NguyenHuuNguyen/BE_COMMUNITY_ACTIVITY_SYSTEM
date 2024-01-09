@@ -7,6 +7,7 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Interfaces
     public interface IMajorRepository
     {
         Task<ICollection<Major>> GetMajorsAsync();
+        Task<ICollection<Major>> GetMajorsByMajorHeadIdAsync(string majorHeadId);
         Task<BasePaginationDto<MajorGetDto>> GetMajorsPaginationAsync(BasePaginationRequestDto dto);
         Task<Major> CreateMajorAsync(MajorCreateDto data);
         Task<Major> UpdateMajorAsync(MajorUpdateDto data);
