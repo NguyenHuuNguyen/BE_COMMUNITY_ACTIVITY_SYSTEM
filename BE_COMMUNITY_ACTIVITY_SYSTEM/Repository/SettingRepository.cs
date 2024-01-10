@@ -37,6 +37,8 @@ namespace BE_COMMUNITY_ACTIVITY_SYSTEM.Repository
             }
 
             setting.Status = status;
+
+            await _context.SaveChangesAsync();
             return setting;
         }
     }

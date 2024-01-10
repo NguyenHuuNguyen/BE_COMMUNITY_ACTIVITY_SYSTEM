@@ -18,8 +18,9 @@
             MAJOR_HEAD_CONFIRMED = 4,
         }
 
-        public enum CommunityActivityApprovalPeriod
+        public enum CommunityActivityApprovalPeriodStatus
         {
+            RESTRICTED = 0,
             STUDENT = 1,
             CLASS_PRESIDENT = 2,
             HEAD_TEACHER = 3,
@@ -70,7 +71,7 @@
             public const string NUMBER_ONLY = "^[0-9]+$";
             public const string CLASSNAME = "^[a-zA-Z0-9_]+$";
             public const string ACCOUNT_ID = "^[a-zA-Z0-9]*$";
-            public const string PHONE_NUMBER = @"^\+(?:[0-9] ?){6,14}[0-9]$";
+            public const string PHONE_NUMBER = @"^(?:\+84|0)(\d{9,10})$";
             public const string EMAIL = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
             public const string WEBSITE_LINK = @"^(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?$";
         }
